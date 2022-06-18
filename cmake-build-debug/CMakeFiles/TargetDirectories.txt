@@ -1,0 +1,3 @@
+/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/cmake-build-debug/CMakeFiles/OS_Wet4.dir

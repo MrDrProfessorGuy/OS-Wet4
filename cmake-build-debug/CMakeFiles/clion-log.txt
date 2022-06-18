@@ -1,0 +1,4 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/usr/local/bin/gcc-10 -G "CodeBlocks - Unix Makefiles" "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4"
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/cmake-build-debug
