@@ -1,10 +1,11 @@
 
 #include "unistd.h"
 #include "string.h"
-
+#include "sys/mman.h"
 #include "assert.h"
 
 #define MAX_SIZE 100000000
+#define MMAP_THRESHOLD 128*1024
 // ############################### API ###############################
 void* srealloc(void* oldp, size_t size);
 void sfree(void* p);
@@ -29,7 +30,9 @@ typedef struct MallocMetadata {
     MallocMetadata* prev_free;
 }BlockMetadata;
 
-#define METADATA_SIZE sizeof(BlockMetadata)
+#define METADATA_SIZE_UNALLINED sizeof(BlockMetadata)
+#define METADATA_SIZE (METADATA_SIZE_UNALLINED + (8-METADATA_SIZE_UNALLINED%8))
+
 
 BlockMetadata* findFreeBlock(size_t size);
 void FreeListInsertBlock(BlockMetadata* free_block);
@@ -42,6 +45,9 @@ typedef struct Stats {
     const size_t meta_data;
 }Stats;
 
+inline size_t MUL_SIZE(size_t size){
+    return (size + (8-size%8));
+}
 static Stats stats = {.free_blocks = 0, .free_bytes = 0, .allocated_blocks = 0, .allocated_bytes = 0, .meta_data = sizeof(BlockMetadata)};
 
 void Stats_update(size_t freeBlocks=0, size_t freeBytes=0, size_t allocatedBlocks=0, size_t allocatrdBytes=0){
@@ -58,7 +64,14 @@ struct List {
     BlockMetadata tail;
 };
 static struct List list {.head = {.size = 0, .is_free = false, .next = &(list.tail), .prev = NULL},
-        .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(list.head)}};
+                         .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(list.head)}};
+
+static struct List mmap_list {.head = {.size = 0, .is_free = false, .next = &(mmap_list.tail), .prev = NULL},
+                              .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(mmap_list.head)}};
+
+/// ====================================================================================================== ///
+/// ========================================== Helper Functions ========================================== ///
+/// ====================================================================================================== ///
 
 
 BlockMetadata* findFreeBlock(size_t size){
@@ -169,9 +182,31 @@ BlockMetadata* initWilde(size_t size){
     
     return new_block;
 }
+
+/// ====================================================================================================== ///
+/// ========================================== Malloc Functions ========================================== ///
+/// ====================================================================================================== ///
 void* smalloc(size_t size){
-    if(size == 0 || size > MAX_SIZE){
+    if(size == 0 || MUL_SIZE(size) > MAX_SIZE){
         return NULL;
+    }
+    size = MUL_SIZE(size);
+    
+    if(size >= MMAP_THRESHOLD){
+        BlockMetadata* new_region = (BlockMetadata*) mmap(NULL, size + METADATA_SIZE, PROT_READ | PROT_WRITE, MAP_ANONYMOUS , -1, 0);
+        if(new_region == MAP_FAILED){
+            return NULL;
+        }
+        
+        new_region->is_free = false;
+        BlockMetadata* next = mmap_list.head.next;
+        linkBlocks(&(mmap_list.head), new_region, BlockList);
+        linkBlocks(new_region, next, BlockList);
+        //linkBlocks(new_region, new_region, FreeList);
+        
+        stats.allocated_blocks++;
+        stats.allocated_bytes+= size;
+        return (new_region + 1);
     }
     BlockMetadata* new_block = findFreeBlock(size);
     if(new_block == NULL){
@@ -212,7 +247,6 @@ void* smalloc(size_t size){
 
 void* scalloc(size_t num, size_t size){
     void* res = smalloc(num * size);
-    
     if(res == NULL){
         return NULL;
     }
@@ -241,6 +275,13 @@ void sfree(void* p){
         return;
     }
     block_meta_data->is_free = true;
+    if (block_meta_data->size >= MMAP_THRESHOLD){
+        linkBlocks(block_meta_data->prev, block_meta_data->next, BlockList);
+        munmap(block_meta_data, block_meta_data->size + METADATA_SIZE);
+        
+        stats.allocated_blocks--;
+        stats.allocated_bytes-=block_meta_data->size;
+    }
     FreeListInsertBlock(block_meta_data);
     stats.free_blocks++;
     stats.free_bytes+= block_meta_data->size;
@@ -251,7 +292,7 @@ void sfree(void* p){
 
 void* srealloc(void* oldp, size_t size){
     BlockMetadata* block_meta_data = (BlockMetadata*)oldp - 1;
-    if(oldp == NULL || block_meta_data->size < size){
+    if(oldp == NULL || block_meta_data->size < MUL_SIZE(size)){
         void* res = smalloc(size);
         if(res == NULL){
             return NULL;
@@ -263,6 +304,11 @@ void* srealloc(void* oldp, size_t size){
     }
     return oldp;
 }
+
+
+/// ====================================================================================================== ///
+/// ========================================== Stats ===================================================== ///
+/// ====================================================================================================== ///
 
 size_t _num_free_blocks(){
     return stats.free_blocks;
