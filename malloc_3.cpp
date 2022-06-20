@@ -6,6 +6,10 @@
 
 #define MAX_SIZE 100000000
 #define MMAP_THRESHOLD 128*1024
+
+#define IS_FREE(block) (block->is_free == true)
+#define IS_WILDERNESS(block) (block->next == &list.tail)
+
 // ############################### API ###############################
 void* srealloc(void* oldp, size_t size);
 void sfree(void* p);
@@ -144,13 +148,13 @@ void splitBlock(BlockMetadata* block, size_t first_blk_size){
         stats.allocated_bytes -= METADATA_SIZE;
     }
 }
-BlockMetadata* combine(BlockMetadata* block){
+BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
     assert(block->is_free);
     size_t total_size = block->size;
     BlockMetadata* new_block = block;
     
     //current + next
-    if (block->next->is_free){
+    if (next && block->next->is_free){
         total_size += block->next->size;
         linkBlocks(block, block->next->next, BlockList);
         linkBlocks(block, block->next->next, FreeList);
@@ -159,7 +163,7 @@ BlockMetadata* combine(BlockMetadata* block){
     }
     
     //prev + current
-    if(block->prev->is_free){
+    if(prev && block->prev->is_free){
         total_size+=block->prev->size;
         new_block = block->prev;
         linkBlocks(block->prev, block->next, BlockList);
@@ -176,8 +180,8 @@ BlockMetadata* initWilde(size_t size){
     if(new_block == (void*)-1){
         return NULL;
     }
-    new_block->is_free = false;
-    new_block->size = size;
+    list.tail.prev->is_free = false;
+    list.tail.prev->size = size;
     stats.allocated_bytes+= size;
     
     return new_block;
@@ -199,6 +203,7 @@ void* smalloc(size_t size){
         }
         
         new_region->is_free = false;
+        new_region->size = size;
         BlockMetadata* next = mmap_list.head.next;
         linkBlocks(&(mmap_list.head), new_region, BlockList);
         linkBlocks(new_region, next, BlockList);
@@ -282,29 +287,126 @@ void sfree(void* p){
         stats.allocated_blocks--;
         stats.allocated_bytes-=block_meta_data->size;
     }
-    FreeListInsertBlock(block_meta_data);
-    stats.free_blocks++;
-    stats.free_bytes+= block_meta_data->size;
+    else{
+        FreeListInsertBlock(block_meta_data);
+        stats.free_blocks++;
+        stats.free_bytes+= block_meta_data->size;
     
-    combine(block_meta_data);
+        combine(block_meta_data);
+    }
+   
 }
 
 
 void* srealloc(void* oldp, size_t size){
-    BlockMetadata* block_meta_data = (BlockMetadata*)oldp - 1;
-    if(oldp == NULL || block_meta_data->size < MUL_SIZE(size)){
+    
+    if (MUL_SIZE(size) >= MMAP_THRESHOLD){
+        sfree(oldp);
+        oldp = smalloc(MUL_SIZE(size));
+    }
+    if (oldp == NULL){
         void* res = smalloc(size);
         if(res == NULL){
             return NULL;
         }
         
-        memmove(res, oldp, block_meta_data->size);
-        sfree(oldp);
         return res;
     }
+    BlockMetadata* block = (BlockMetadata*)oldp - 1;
+    if (block->size >= MUL_SIZE(size)){ /// a
+        splitBlock(block, MUL_SIZE(size));
+        return block+1;
+    }
+    
+    
+    bool merge_prev = (IS_FREE(block->prev) && (block->prev->size + block->size >= MUL_SIZE(size)));
+    bool merge_next = (IS_FREE(block->next) && (block->next->size + block->size >= MUL_SIZE(size)));
+    bool merge_all = (IS_FREE(block->prev)) && IS_FREE(block->next) && (block->prev->size + block->size +
+                                                                        block->next->size >= MUL_SIZE(size));
+    
+    BlockMetadata* tmp_data = (BlockMetadata*) mmap(NULL, MUL_SIZE(size), PROT_READ | PROT_WRITE, MAP_ANONYMOUS , -1, 0);
+    if(tmp_data == MAP_FAILED){
+        return NULL;
+    }
+    else{
+        memmove(tmp_data, block+1, block->size);
+    }
+    
+    if(merge_prev){/// b
+        stats.free_blocks--;
+        stats.free_bytes -= block->prev->size;
+        block->is_free = true;
+        
+        block = combine(block, true, false);
+        block->is_free = false;
+        splitBlock(block, MUL_SIZE(size));
+        /// unmap tmp
+        memmove(block+1, tmp_data, MUL_SIZE(size));
+        munmap(tmp_data, MUL_SIZE(size));
+    }
+    else if(IS_WILDERNESS(block)){/// c
+        if (IS_FREE(block->prev)){ /// b_note
+            stats.free_blocks--;
+            stats.free_bytes -= block->prev->size;
+            block->is_free = true;
+    
+            block = combine(block, true, false);
+            block->is_free = false;
+            
+        }
+        initWilde(MUL_SIZE(size));
+        /// unmap tmp
+        memmove(block+1, tmp_data, MUL_SIZE(size));
+        munmap(tmp_data, MUL_SIZE(size));
+    }
+    else if(merge_next){/// d
+        stats.free_blocks--;
+        stats.free_bytes -= block->prev->size;
+        block->is_free = true;
+    
+        combine(block, false, true);
+        block->is_free = false;
+        splitBlock(block, MUL_SIZE(size));
+        /// unmap tmp
+        memmove(block+1, tmp_data, MUL_SIZE(size));
+        munmap(tmp_data, MUL_SIZE(size));
+    }
+    else if(merge_all){/// e + f.1
+        stats.free_blocks -= 2;
+        stats.free_bytes -= block->prev->size + block->next->size;
+        block->is_free = true;
+        block = combine(block, true, true);
+        block->is_free = false;
+        splitBlock(block, MUL_SIZE(size));
+        
+        /// unmap tmp
+        memmove(block+1, tmp_data, MUL_SIZE(size));
+        munmap(tmp_data, MUL_SIZE(size));
+    }
+    else if(IS_WILDERNESS(block->next)){/// f.2
+        if (IS_FREE(block->prev) && IS_FREE(block->next)){
+            stats.free_blocks -= 2;
+            stats.free_bytes -= block->prev->size + block->next->size;
+            block->is_free = true;
+            block = combine(block, true, true);
+            block->is_free = false;
+        }
+        initWilde(MUL_SIZE(size));
+        /// unmap tmp
+        memmove(block+1, tmp_data, MUL_SIZE(size));
+        munmap(tmp_data, MUL_SIZE(size));
+    }
+    else{/// g + h
+       
+        memmove(block+1, tmp_data, MUL_SIZE(size));
+        munmap(tmp_data, MUL_SIZE(size));
+        sfree(oldp);
+        oldp = smalloc(MUL_SIZE(size));
+    }
+    
+    
     return oldp;
 }
-
 
 /// ====================================================================================================== ///
 /// ========================================== Stats ===================================================== ///
