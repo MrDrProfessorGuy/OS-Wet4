@@ -105,6 +105,7 @@ BlockMetadata* findFreeBlock(size_t size){
     BlockMetadata* iter = list.head.next_free;
     while(iter != &list.tail){
         if(size <= iter->size){
+            assert(iter->is_free);
             return iter;
         }
         iter = iter->next_free;
