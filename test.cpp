@@ -71,7 +71,7 @@ public:
             for (size_t a = 0; a < iter->size+METADATA_SIZE; a += step){
                 cout<<setfill('_')<<setw(18)<< a << "|| ";
                 if(print == MetaData && a >= METADATA_SIZE){
-                    cout <<setfill('_')<<setw(width)<< "MetaDataBlock END" <<setw(width);
+                    cout <<setfill('-')<<setw(width)<< "MetaData END" <<setw(width);
                     print = Size;
                 }
                 else if(print == Size){
