@@ -261,13 +261,14 @@ void* smalloc(size_t size){
         }
     }
     else{
-        new_block->is_free = false;
-        //cout << "##########################################################" << endl;
+        
+        cout << "##########################################################" << endl;
         cout << "smalloc:: using existing block " << new_block << endl;
         printHeap();
+        new_block->is_free = false;
         linkBlocks(new_block->prev_free, new_block->next_free, FreeList);
-        //printHeap();
-        //cout << "##########################################################" << endl;
+        printHeap();
+        cout << "##########################################################" << endl;
         stats.free_blocks--;
         stats.free_bytes-= new_block->size;
         splitBlock(new_block, size);
