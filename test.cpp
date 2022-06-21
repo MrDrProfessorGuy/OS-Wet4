@@ -179,7 +179,7 @@ public:
                 }
                 cout << "test_2:: free address=" << BLOCK_STRT_ADDR(*iter) << endl;
                 sfree(*iter);
-                assert(validSize(((BlockMetadata*)(*iter))-METADATA_SIZE));
+                assert(validSize(((BlockMetadata*)(*iter))-1));
                 blocks.erase(iter);
             }
             else if (op == Realloc){
