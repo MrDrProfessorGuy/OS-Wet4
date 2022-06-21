@@ -64,11 +64,16 @@ public:
         int counter = 0;
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             cout <<setfill('_')<<setw(18)<< iter;
+            if (iter->next != &list.tail){
+                if ((iter->size + METADATA_SIZE + (char*)iter) != (char*)iter->next){
+                    cout << <<setfill('_')<< "BAD_SIZE";
+                }
+            }
             cout <<setfill('=')<<"||"<<std::setw(2*width)<<"||"<<endl;
             printT print = MetaData;
             
             size_t step = max((iter->size+METADATA_SIZE)/8,(size_t)1);
-
+    
             
             for (size_t a = 0; a < iter->size+METADATA_SIZE; a += step){
                 cout<<setfill('_')<<setw(18)<< a << "|| ";
@@ -79,6 +84,7 @@ public:
                 }
                 else if(print == Size){
                     cout <<setfill('_')<<setw(width)<< "size= " << iter->size <<setw(width-3);
+                    
                     print = IsFree;
                 }
                 else if(print == IsFree){
