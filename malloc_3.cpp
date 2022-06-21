@@ -285,7 +285,7 @@ void* smalloc(size_t size){
     BlockMetadata* new_block = findFreeBlock(size);
     if(new_block == NULL){
         
-        if(list.head.next == &list.tail){ //Empty List
+        if(false && list.head.next == &list.tail){ //Empty List
             new_block = initBlock(size);
             if(new_block == NULL){
                 return NULL;
@@ -293,8 +293,9 @@ void* smalloc(size_t size){
             //assert(tail.prev == NULL);
             linkBlocks(&list.head, new_block, BlockList);
             linkBlocks(new_block, &list.tail, BlockList);
+            
         }
-        else if (list.tail.prev->is_free){
+        if (list.tail.prev->is_free){
             if (initWilde(size) == NULL){
                 return NULL;
             }
@@ -308,6 +309,8 @@ void* smalloc(size_t size){
             }
             linkBlocks((list.tail.prev), new_block, BlockList);
             linkBlocks(new_block, &list.tail, BlockList);
+            new_block->next_free = NULL;
+            new_block->prev_free = NULL;
         }
     }
     else{
