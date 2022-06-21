@@ -103,9 +103,14 @@ public:
         MemView();
         void* b = smalloc(200);
         MemView();
+        sfree(b);
+        MemView();
+        
+        void* c = smalloc(400);
+        MemView();
         sfree(a);
         MemView();
-        sfree(b);
+        sfree(c);
         MemView();
     }
     
