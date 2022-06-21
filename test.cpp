@@ -59,20 +59,28 @@ public:
     void MemView(){
         int width = 20;
         std::cout << "======================= Memory View =======================" << std::endl;
+        enum printT {MetaData, Size, IsFree, Fill};
         
         int counter = 0;
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             cout <<setfill('_')<<setw(18)<< iter;
             cout <<setfill('=')<<"||"<<std::setw(2*width)<<"||"<<endl;
+            printT print = MetaData;
             
-            size_t step = max(iter->size/12,(size_t)1);
-            for (size_t a = 0; a < iter->size; a += step){
+            size_t step = max((iter->size+METADATA_SIZE)/12,(size_t)1);
+            for (size_t a = 0; a < iter->size+METADATA_SIZE; a += step){
                 cout<<setfill('_')<<setw(18)<< a << "|| ";
-                if(a == 5*step){
+                if(print == MetaData && a >= METADATA_SIZE){
                     cout <<setfill('_')<<setw(width)<< "size= " << iter->size <<setw(width-3);
+                    print = Size;
                 }
-                else if(a == 6*step){
+                if(print == Size){
+                    cout <<setfill('_')<<setw(width)<< "size= " << iter->size <<setw(width-3);
+                    print = IsFree;
+                }
+                else if(print == IsFree){
                     cout <<setfill('_')<<setw(width)<< "free= " << iter->is_free <<setw(width-1);
+                    print = Fill;
                 }
                 else{
                     cout <<setfill('_')<<setw(2*width);
