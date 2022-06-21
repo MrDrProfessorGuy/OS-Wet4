@@ -62,11 +62,11 @@ public:
         
         int counter = 0;
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
-            cout <<setfill('_')<< iter <<setw(18)<<"|"<<std::setw(2*width)<<"|"<<endl;
+            cout <<setfill('_')<<setw(18)<< iter <<"|"<<std::setw(2*width)<<"|"<<endl;
             
             size_t step = iter->size/12;
             for (size_t a = 0; a < iter->size; a += step){
-                cout<<setfill('_')<< a <<setw(18)<< "|| "<<setw(width);
+                cout<<setfill('_')<<setw(18)<< a << "|| "<<setw(width);
                 if(a == 6*step){
                     cout <<setfill('_')<<setw(width)<< "-size= " << iter->size <<setw(width);
                 }
