@@ -68,9 +68,7 @@ public:
             printT print = MetaData;
             
             size_t step = max((iter->size+METADATA_SIZE)/32,(size_t)1);
-            if (step <= 3){
-                step = max((iter->size+METADATA_SIZE)/16,(size_t)1);
-            }
+
             
             for (size_t a = 0; a < iter->size+METADATA_SIZE; a += step){
                 cout<<setfill('_')<<setw(18)<< a << "|| ";
@@ -101,7 +99,7 @@ public:
     void test1(){
         print();
         printHeap();
-        void* a = smalloc(2);
+        void* a = smalloc(1000);
         MemView();
         void* b = smalloc(200);
         MemView();
