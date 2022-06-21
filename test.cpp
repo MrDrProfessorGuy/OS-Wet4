@@ -64,18 +64,18 @@ public:
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
           
-            cout << iter<<setw(8) <<setfill('_')<<std::setw(2*width)<<endl;
+            cout << iter <<setw(8) <<setfill('=')<<std::setw(2*width)<<endl;
             size_t step = iter->size/12;
             for (size_t a = 0; a < iter->size; a += step){
-                cout << a <<setw(8)<< "| "<<setfill('_')<<setw(width);
+                cout << a <<setw(8)<< "|| "<<setfill('_')<<setw(width);
                 if(a == 6*step){
-                    cout <<setw(8)<<setfill('_')<< "-size= " << iter->size <<setw(width)<< "||"<<setw(width)<<"-is_free= " << iter->is_free << std::endl;
+                    cout <<setw(8)<<setfill('_')<<setw(width)<< "-size= " << iter->size <<setw(width);
                 }
                 else{
                     cout <<setfill('_')<<setw(2*width);
                 }
                 
-                cout <<" |"<<endl;
+                cout <<" #"<<endl;
             }
             counter++;
         }
