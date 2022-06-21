@@ -80,6 +80,7 @@ static struct List mmap_list {.head = {.size = 0, .is_free = false, .next = &(mm
 /// ========================================== Helper Functions ========================================== ///
 /// ====================================================================================================== ///
 
+void ListRemove(BlockMetadata* meta_data, ListType list);
 
 void printHeap(){
     std::cout << "======================= PrintHeap =======================" << std::endl;
@@ -131,6 +132,22 @@ void linkBlocks(BlockMetadata* first, BlockMetadata* second, ListType list_type)
     }
 }
 
+void ListRemove(BlockMetadata* meta_data, ListType list){
+    if (meta_data == NULL){
+        return;
+    }
+    BlockMetadata* prev = meta_data->prev_free;
+    BlockMetadata* next = meta_data->next_free;
+    linkBlocks(prev, next, list);
+    if (list == BlockList){
+        meta_data->next = NULL;
+        meta_data->prev = NULL;
+    }
+    else{
+        meta_data->next_free = NULL;
+        meta_data->prev_free = NULL;
+    }
+}
 
 
 BlockMetadata* initBlock(size_t size){
@@ -184,9 +201,12 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
     //current + next
     if (next && block->next->is_free){
         total_size += block->next->size + METADATA_SIZE;
-        BlockMetadata* next = block->next->next;
-        linkBlocks(block, next, BlockList);
-        linkBlocks(block, next, FreeList);
+        //BlockMetadata* next = block->next->next;
+        //linkBlocks(block, next, BlockList);
+        //linkBlocks(block, next, FreeList);
+        ListRemove(new_block, BlockList);
+        ListRemove(new_block, FreeList);
+        
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
     }
@@ -195,9 +215,11 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
     if(prev && block->prev->is_free){
         total_size+=block->prev->size + METADATA_SIZE;
         new_block = block->prev;
-        BlockMetadata* next = block->next;
-        linkBlocks(new_block, next, BlockList);
-        linkBlocks(new_block, next, FreeList);
+        //BlockMetadata* next = block->next;
+        //linkBlocks(new_block, next, BlockList);
+        //linkBlocks(new_block, next, FreeList);
+        ListRemove(new_block, BlockList);
+        ListRemove(new_block, FreeList);
         
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
