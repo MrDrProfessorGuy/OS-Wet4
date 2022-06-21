@@ -93,6 +93,7 @@ public:
         sfree(b);
         print();
         printList();
+        MemView();
     }
     
 };
