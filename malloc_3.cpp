@@ -39,6 +39,20 @@ typedef struct MallocMetadata {
 #define METADATA_SIZE_UNALLINED sizeof(BlockMetadata)
 #define METADATA_SIZE (METADATA_SIZE_UNALLINED)
 
+void printHeap(){
+    std::cout << "======================= PrintHeap =======================" << std::endl;
+    
+    int counter = 0;
+    for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
+        std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
+        std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
+        std::cout << "      -prev= " << iter->prev << "     ||      -next= " << iter->next << std::endl;
+        std::cout << "      -prev_free= " << iter->prev_free << "       ||      -next_free= " << iter->next_free << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        counter++;
+    }
+    
+}
 
 BlockMetadata* findFreeBlock(size_t size);
 void FreeListInsertBlock(BlockMetadata* free_block);
@@ -246,7 +260,12 @@ void* smalloc(size_t size){
     }
     else{
         new_block->is_free = false;
+        cout << "##########################################################" << endl;
+        cout << "smalloc:: using existing block " << new_block << endl;
+        printHeap();
         linkBlocks(new_block->prev_free, new_block->next_free, FreeList);
+        printHeap();
+        cout << "##########################################################" << endl;
         stats.free_blocks--;
         stats.free_bytes-= new_block->size;
         splitBlock(new_block, size);
