@@ -7,7 +7,7 @@
 using namespace std;
 
 #define MAX_SIZE 100000000
-#define MMAP_THRESHOLD 128*1024
+#define MMAP_THRESHOLD (128*1024)
 
 #define IS_FREE(block) (block->is_free == true)
 #define IS_WILDERNESS(block) (block->next == &list.tail)
