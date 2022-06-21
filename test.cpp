@@ -161,7 +161,7 @@ public:
                     continue;
                 }
                 blocks.push_back(block);
-                assert(validSize(((BlockMetadata*)block)-1)));
+                assert(validSize(((BlockMetadata*)block)-1));
             }
             else if (op == Free){
                 if (blocks.empty()){
