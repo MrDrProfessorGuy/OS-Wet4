@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/OS_Wet4.dir/malloc_1.cpp.o"
   "CMakeFiles/OS_Wet4.dir/malloc_2.cpp.o"
   "CMakeFiles/OS_Wet4.dir/malloc_3.cpp.o"
+  "CMakeFiles/OS_Wet4.dir/test.cpp.o"
   "OS_Wet4"
   "OS_Wet4.pdb"
 )

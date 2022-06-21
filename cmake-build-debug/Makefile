@@ -223,6 +223,33 @@ malloc_3.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/OS_Wet4.dir/build.make CMakeFiles/OS_Wet4.dir/malloc_3.cpp.s
 .PHONY : malloc_3.cpp.s
 
+test.o: test.cpp.o
+
+.PHONY : test.o
+
+# target to build an object file
+test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OS_Wet4.dir/build.make CMakeFiles/OS_Wet4.dir/test.cpp.o
+.PHONY : test.cpp.o
+
+test.i: test.cpp.i
+
+.PHONY : test.i
+
+# target to preprocess a source file
+test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OS_Wet4.dir/build.make CMakeFiles/OS_Wet4.dir/test.cpp.i
+.PHONY : test.cpp.i
+
+test.s: test.cpp.s
+
+.PHONY : test.s
+
+# target to generate assembly for a file
+test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OS_Wet4.dir/build.make CMakeFiles/OS_Wet4.dir/test.cpp.s
+.PHONY : test.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -241,6 +268,9 @@ help:
 	@echo "... malloc_3.o"
 	@echo "... malloc_3.i"
 	@echo "... malloc_3.s"
+	@echo "... test.o"
+	@echo "... test.i"
+	@echo "... test.s"
 .PHONY : help
 
 
