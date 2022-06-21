@@ -85,12 +85,17 @@ void printHeap(){
     std::cout << "======================= PrintHeap =======================" << std::endl;
     
     int counter = 0;
-    int width = 40;
+    int width = 20;
     for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
         std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
-        std::cout <<setw(width)<< "size= " << iter->size << " || "<<setw(width)<<"is_free= " << iter->is_free << std::endl;
-        std::cout <<setw(width)<< "prev= " << iter->prev << " || "<<setw(width)<<"next= " << iter->next << std::endl;
-        std::cout <<setw(width)<< "prev_free= " << iter->prev_free << " || "<<setw(width)<<"next_free= " << iter->next_free << std::endl;
+        std::cout <<setw(width)<< "size= " << iter->size << " || ";
+        cout <<setw(width)<<"is_free= " << iter->is_free << std::endl;
+        
+        std::cout <<setw(width)<< "prev= " << iter->prev << " || ";
+        cout <<setw(width)<<"next= " << iter->next << std::endl;
+        
+        std::cout <<setw(width)<< "prev_free= " << iter->prev_free << " || ";
+        cout <<setw(width)<<"next_free= " << iter->next_free << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
         counter++;
     }
