@@ -67,11 +67,11 @@ struct List {
     BlockMetadata head;
     BlockMetadata tail;
 };
-static struct List list {.head = {.size = 0, .is_free = false, .next = &(list.tail), .prev = NULL},
-                         .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(list.head)}};
+static struct List list {.head = {.size = 0, .is_free = false, .next = &(list.tail), .prev = NULL, .next_free=&list.tail, .prev_free=NULL},
+                         .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(list.head), .next_free=NULL, .prev_free=&list.head}};
 
-static struct List mmap_list {.head = {.size = 0, .is_free = false, .next = &(mmap_list.tail), .prev = NULL},
-                              .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(mmap_list.head)}};
+static struct List mmap_list {.head = {.size = 0, .is_free = false, .next = &(mmap_list.tail), .prev = NULL, .next_free=&mmap_list.tail, .prev_free=NULL},
+                              .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(mmap_list.head), .next_free=NULL, .prev_free=&mmap_list.head}};
 
 /// ====================================================================================================== ///
 /// ========================================== Helper Functions ========================================== ///
