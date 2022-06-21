@@ -3,6 +3,7 @@
 #include "malloc_3.cpp"
 #include "iostream"
 #include "iomanip"
+#include "vector"
 using namespace std;
 
 
@@ -64,11 +65,7 @@ public:
         int counter = 0;
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             cout <<setfill('_')<<setw(18)<< iter;
-            if (iter->next != &list.tail){
-                if ((iter->size + METADATA_SIZE + (char*)iter) != (char*)iter->next){
-                    cout << <<setfill('_')<< "BAD_SIZE";
-                }
-            }
+
             cout <<setfill('=')<<"||"<<std::setw(2*width)<<"||"<<endl;
             printT print = MetaData;
             
@@ -101,7 +98,17 @@ public:
         }
         std::cout << "------------------------------------------------------------" << std::endl;
     }
-    
+    bool validSize(BlockMetadata* iter, bool print=true){
+        if (iter->next != &list.tail){
+            if ((iter->size + METADATA_SIZE + (char*)iter) != (char*)iter->next){
+                if (print){
+                    MemView();
+                }
+                return false;
+            }
+        }
+        return true;
+    }
     void test1(){
         print();
         printHeap();
@@ -119,7 +126,46 @@ public:
         sfree(c);
         MemView();
     }
-    
+
+    void test2(){
+        vector<void*> blocks;
+        int test_num = 100;
+        enum OP {Malloc, Calloc, Free, Realloc, OPs_NUM};
+        
+        for (int a = 0; a < test_num; a++){
+            int op = rand()%OPs_NUM;
+            size_t size = rand()%MMAP_THRESHOLD;
+            
+            if (op == Malloc){
+                blocks.push_back(smalloc(size));
+                assert(validSize((BlockMetadata*)blocks.back()));
+            }
+            else if (op == Calloc){
+                size_t items = rand()%10;
+                blocks.push_back(scalloc(items, size));
+                assert(validSize((BlockMetadata*)blocks.back()));
+            }
+            else if (op == Free){
+                if (blocks.empty()){
+                    continue;
+                }
+                int pos = rand()%blocks.size();
+                auto iter = blocks.begin();
+                for (int a = 0; a <= pos; a++){
+                    iter++;
+                }
+               
+                sfree(*iter);
+                assert(validSize((BlockMetadata*)*iter));
+                blocks.erase(iter);
+            }
+            else if (op == Realloc){
+            
+            }
+        }
+        
+        
+    }
 };
 
 
@@ -127,8 +173,8 @@ public:
 
 int main(int argc,char* argv[]) {
     test a;
-    a.test1();
-
+    a.test2();
+    
     return 0;
 }
 
