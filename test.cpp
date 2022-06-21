@@ -150,7 +150,7 @@ public:
                     continue;
                 }
                 blocks.push_back(block);
-                assert(validSize((BlockMetadata*)blocks.back()));
+                assert(validSize((BlockMetadata*)block));
             }
             else if (op == Calloc){
                 
