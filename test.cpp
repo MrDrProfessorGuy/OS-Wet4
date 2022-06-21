@@ -137,7 +137,7 @@ public:
     void test2(){
         vector<void*> blocks;
         int test_num = 100;
-        srand(87);
+        srand(872);
         enum OP {Malloc, Calloc, Free, Realloc, OPs_NUM};
         
         for (int a = 0; a < test_num; a++){
@@ -147,7 +147,6 @@ public:
             if (op == Malloc){
                 cout << "test_2:: malloc " << size << endl;
                 void* block = smalloc(size);
-                cout << block << endl;
                 if (block == nullptr){
                     continue;
                 }
@@ -155,7 +154,6 @@ public:
                 assert(validSize((BlockMetadata*)block-1));
             }
             else if (op == Calloc){
-                
                 size_t items = rand()%10;
                 cout << "test_2:: calloc, items= "<< items <<",    size= "<<size << endl;
                 blocks.push_back(scalloc(items, size));
