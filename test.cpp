@@ -66,7 +66,7 @@ public:
             
             size_t step = iter->size/12;
             for (size_t a = 0; a < iter->size; a += step){
-                cout<<setfill('_')<<setw(18)<< a << "|| "<<setw(width);
+                cout<<setfill('_')<<setw(18)<< a << "|| ";
                 if(a == 6*step){
                     cout <<setfill('_')<<setw(width)<< "-size= " << iter->size <<setw(width);
                 }
