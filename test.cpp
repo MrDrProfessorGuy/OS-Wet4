@@ -143,7 +143,7 @@ public:
         
         for (int a = 0; a < test_num; a++){
             int op = rand()%OPs_NUM;
-            int size = rand()%MMAP_THRESHOLD;
+            int size = rand()%(MMAP_THRESHOLD/12);
             
             if (op == Malloc){
                 cout << "test_2:: malloc " << size;
