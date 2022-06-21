@@ -67,7 +67,7 @@ public:
             cout <<setfill('=')<<"||"<<std::setw(2*width)<<"||"<<endl;
             printT print = MetaData;
             
-            size_t step = max((iter->size+METADATA_SIZE)/32,(size_t)1);
+            size_t step = max((iter->size+METADATA_SIZE)/8,(size_t)1);
 
             
             for (size_t a = 0; a < iter->size+METADATA_SIZE; a += step){
