@@ -59,7 +59,15 @@ public:
         void* a = smalloc(10);
         print();
         printList();
-        
+        void* b = smalloc(20);
+        print();
+        printList();
+        sfree(a);
+        print();
+        printList();
+        sfree(b);
+        print();
+        printList();
     }
     
 };
