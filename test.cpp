@@ -176,7 +176,7 @@ public:
                 for (int a = 0; a <= pos; a++){
                     iter++;
                 }
-                cout << "test_2:: free " << (void*)*iter << endl;
+                cout << "test_2:: free address=" << (BlockMetadata *)*iter-1 << endl;
                 sfree(*iter);
                 assert(validSize((BlockMetadata*)*iter-1));
                 blocks.erase(iter);
