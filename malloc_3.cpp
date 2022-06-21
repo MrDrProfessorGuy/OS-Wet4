@@ -100,8 +100,22 @@ void printHeap(){
         std::cout << "------------------------------------------------------------" << std::endl;
         counter++;
     }
+}
+void printHeapFree(){
+    std::cout << "======================= PrintHeapFree =======================" << std::endl;
+    
+    int counter = 0;
+    for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next_free) {
+        std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
+        std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
+        std::cout << "      -prev= " << iter->prev << "     ||      -next= " << iter->next << std::endl;
+        std::cout << "      -prev_free= " << iter->prev_free << "       ||      -next_free= " << iter->next_free << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        counter++;
+    }
     
 }
+
 BlockMetadata* findFreeBlock(size_t size){
     BlockMetadata* iter = list.head.next_free;
     while(iter != &list.tail){
@@ -363,7 +377,7 @@ void sfree(void* p){
         FreeListInsertBlock(block_meta_data);
         stats.free_blocks++;
         stats.free_bytes+= block_meta_data->size;
-        printHeap();
+        printHeapFree();
         combine(block_meta_data);
     }
    
