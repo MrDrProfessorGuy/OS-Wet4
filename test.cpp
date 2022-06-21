@@ -6,6 +6,7 @@
 #include "vector"
 using namespace std;
 
+#define BLOCK_STRT_ADDR(block) (((BlockMetadata*)(block))-1)
 
 class test{
 public:
@@ -152,7 +153,7 @@ public:
                     continue;
                 }
                 blocks.push_back(block);
-                cout << "   address= "<< block << endl;
+                cout << "   address= "<< BLOCK_STRT_ADDR(block) << endl;
                 assert(validSize(((BlockMetadata*)block)-1));
             }
             else if (op == Calloc){
@@ -160,12 +161,12 @@ public:
                 cout << "test_2:: calloc, items= "<< items <<",    size= "<<size;
                 void* block = scalloc(items, size);
                 if (block == nullptr){
-                    cout << "   address= "<< block << endl;
+                    cout << "   address= "<< BLOCK_STRT_ADDR(block) << endl;
                     continue;
                 }
                 blocks.push_back(block);
-                cout << "   address= "<< block << endl;
-                assert(validSize(((BlockMetadata*)block)-1));
+                cout << "   address= "<< BLOCK_STRT_ADDR(block) << endl;
+                assert(validSize(BLOCK_STRT_ADDR(block)));
             }
             else if (op == Free){
                 if (blocks.empty()){
@@ -176,7 +177,7 @@ public:
                 for (int a = 0; a <= pos; a++){
                     iter++;
                 }
-                cout << "test_2:: free address=" << (BlockMetadata *)*iter-1 << endl;
+                cout << "test_2:: free address=" << BLOCK_STRT_ADDR(*iter) << endl;
                 sfree(*iter);
                 assert(validSize((BlockMetadata*)*iter-1));
                 blocks.erase(iter);
