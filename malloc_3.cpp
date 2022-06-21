@@ -85,7 +85,7 @@ void printHeap(){
     std::cout << "======================= PrintHeap =======================" << std::endl;
     
     int counter = 0;
-    int width = 20;
+    int width = 40;
     for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
         std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
         std::cout <<setw(width)<< "size= " << iter->size << " || "<<setw(width)<<"is_free= " << iter->is_free << std::endl;
