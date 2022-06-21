@@ -65,7 +65,7 @@ public:
             cout <<setfill('_')<<setw(18)<< iter;
             cout <<setfill('=')<<"||"<<std::setw(2*width)<<"||"<<endl;
             
-            size_t step = iter->size/12;
+            size_t step = max(iter->size/12,(size_t)1);
             for (size_t a = 0; a < iter->size; a += step){
                 cout<<setfill('_')<<setw(18)<< a << "|| ";
                 if(a == 5*step){
@@ -88,7 +88,7 @@ public:
     void test1(){
         print();
         printHeap();
-        void* a = smalloc(100);
+        void* a = smalloc(2);
         MemView();
         void* b = smalloc(200);
         MemView();
