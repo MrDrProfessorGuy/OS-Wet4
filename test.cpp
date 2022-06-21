@@ -195,6 +195,7 @@ public:
             else if (op == Calloc){
                 size_t items = rand()%10;
                 cout << "test_2:: calloc, items= "<< items <<",    size= "<<size;
+                cout.flush();
                 void* block = scalloc(items, size);
                 if (block == nullptr){
                     cout << "   address= "<< BLOCK_STRT_ADDR(block) << endl;
