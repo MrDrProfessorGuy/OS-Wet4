@@ -323,20 +323,19 @@ void* scalloc(size_t num, size_t size){
 
 void FreeListInsertBlock(BlockMetadata* free_block){
     BlockMetadata* iter = list.head.next_free;
-    //cout << "============= FreeListInsertBlock =============" << endl;
-    //cout << "free_block= " << free_block << endl;
+    cout << "============= FreeListInsertBlock =============" << endl;
+    cout << "free_block= " << free_block << endl;
     int count = 0;
     while(iter != &list.tail &&  iter->size < free_block->size){
         iter = iter->next_free;
-        //cout << "iter= " << iter << endl;
         assert(count < 30);
         count++;
     }
     BlockMetadata* prev = iter->prev_free;
-   
     
-    //cout << "iter.prev= " << prev << endl;
-    //cout << "============= FreeListInsertBlock END =============" << endl;
+    cout << "iter= " << iter << endl;
+    cout << "iter.prev= " << prev << endl;
+    cout << "============= FreeListInsertBlock END =============" << endl;
     
     linkBlocks(free_block, iter, FreeList);
     linkBlocks(prev, free_block, FreeList);
