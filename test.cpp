@@ -99,6 +99,7 @@ public:
         std::cout << "------------------------------------------------------------" << std::endl;
     }
     bool validSize(BlockMetadata* iter, bool print=true){
+        cout << iter << endl;
         if (iter->next != &list.tail){
             if ((iter->size + METADATA_SIZE + (char*)iter) != (char*)iter->next){
                 if (print){
