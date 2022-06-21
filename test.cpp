@@ -57,19 +57,19 @@ public:
     }
     
     void MemView(){
-        int width = 40;
+        int width = 20;
         std::cout << "======================= Print List =======================" << std::endl;
         
         int counter = 0;
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
           
-            cout << iter<<setw(18) <<setfill('_')<<std::setw(width)<<endl;
+            cout <<setfill("")<< iter<<setw(18) <<setfill('_')<<std::setw(2*width)<<endl;
             size_t step = iter->size/12;
             for (size_t a = 0; a < iter->size; a += step){
                 cout << a <<setw(18)<< "| "<<setfill('_')<<setw(width);
                 if(a == 6*step){
-                    cout <<setw(18)<<setfill('_')<< "-size= " << iter->size <<setw(20)<< "||"<<setw(20)<<"-is_free= " << iter->is_free << std::endl;
+                    cout <<setw(18)<<setfill('_')<< "-size= " << iter->size <<setw(width)<< "||"<<setw(width)<<"-is_free= " << iter->is_free << std::endl;
                     continue;
                 }
                 cout <<" |"<<endl;
