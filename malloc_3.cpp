@@ -179,8 +179,9 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
 }
 BlockMetadata* initWilde(size_t size){
     BlockMetadata* new_block = (BlockMetadata*) sbrk((intptr_t) (size - list.tail.prev->size));
-    cout <<"initWilde:: new size= "<< size - list.tail.prev->size << "    new_block= "<< new_block << endl;
+    //cout <<"initWilde:: new size= "<< size - list.tail.prev->size << "    new_block= "<< new_block << endl;
     if(new_block == (void*)-1){
+        cout << "NO"<< endl;
         return NULL;
     }
     list.tail.prev->is_free = false;
