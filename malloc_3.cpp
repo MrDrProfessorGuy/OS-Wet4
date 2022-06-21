@@ -108,7 +108,7 @@ void linkBlocks(BlockMetadata* first, BlockMetadata* second, ListType list_type)
 
 
 BlockMetadata* initBlock(size_t size){
-    BlockMetadata* allocated_block = (BlockMetadata*) sbrk((intptr_t) (size + sizeof(BlockMetadata)));
+    BlockMetadata* allocated_block = (BlockMetadata*) sbrk((intptr_t) (size + METADATA_SIZE));
     if(allocated_block == (void*)-1){
         return NULL;
     }
@@ -129,7 +129,7 @@ bool largeEnough(size_t size){
 
 void splitBlock(BlockMetadata* block, size_t first_blk_size){
     //assert(block->is_free);
-    size_t new_size = (block->size + METADATA_SIZE) - (first_blk_size + METADATA_SIZE);
+    size_t new_size = (block->size) - (first_blk_size + METADATA_SIZE);
     
     if(block->size > first_blk_size && largeEnough(new_size)){
         BlockMetadata* new_block = (BlockMetadata*)((char*)block + METADATA_SIZE + first_blk_size);
@@ -267,15 +267,17 @@ void* scalloc(size_t num, size_t size){
 
 void FreeListInsertBlock(BlockMetadata* free_block){
     BlockMetadata* iter = list.head.next_free;
+    cout << "============= FreeListInsertBlock =============" << endl;
+    cout << "free_block= " << free_block << endl;
     while(iter != &list.tail &&  iter->size < free_block->size){
         iter = iter->next_free;
+        cout << "iter= " << iter << endl;
     }
     BlockMetadata* prev = iter->prev_free;
-    //cout << "============= FreeListInsertBlock =============" << endl;
-    //cout << "free_block= " << free_block << endl;
-    //cout << "iter= " << iter << endl;
-    //cout << "iter.prev= " << prev << endl;
-    //cout << "============= FreeListInsertBlock END =============" << endl;
+   
+    
+    cout << "iter.prev= " << prev << endl;
+    cout << "============= FreeListInsertBlock END =============" << endl;
     
     linkBlocks(free_block, iter, FreeList);
     linkBlocks(prev, free_block, FreeList);
