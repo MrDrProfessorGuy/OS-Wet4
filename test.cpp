@@ -140,15 +140,18 @@ public:
             size_t size = rand()%MMAP_THRESHOLD;
             
             if (op == Malloc){
+                cout << "test_2:: malloc" << endl;
                 blocks.push_back(smalloc(size));
                 assert(validSize((BlockMetadata*)blocks.back()));
             }
             else if (op == Calloc){
+                cout << "test_2:: calloc" << endl;
                 size_t items = rand()%10;
                 blocks.push_back(scalloc(items, size));
                 assert(validSize((BlockMetadata*)blocks.back()));
             }
             else if (op == Free){
+                cout << "test_2:: free" << endl;
                 if (blocks.empty()){
                     continue;
                 }
