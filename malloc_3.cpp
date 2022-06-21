@@ -271,7 +271,7 @@ void* smalloc(size_t size){
     else{
         
         //cout << "##########################################################" << endl;
-        //cout << "smalloc:: using existing block " << new_block << endl;
+        cout << "smalloc:: using existing block " << new_block << endl;
         //printHeap();
         new_block->is_free = false;
         linkBlocks(new_block->prev_free, new_block->next_free, FreeList);
