@@ -179,9 +179,9 @@ public:
         for (int a = 0; a < test_num; a++){
             int op = rand()%OPs_NUM;
             int size = rand()%(MMAP_THRESHOLD/12);
-            
+            cout << "test_2[" << a <<"::";
             if (op == Malloc){
-                cout << "test_2:: malloc " << size;
+                cout << "malloc " << size;
                 cout.flush();
                 //printHeap();
                 void* block = smalloc(size);
@@ -194,7 +194,7 @@ public:
             }
             else if (op == Calloc){
                 size_t items = rand()%10;
-                cout << "test_2:: calloc, items= "<< items <<",    size= "<<size;
+                cout << "calloc, items= "<< items <<",    size= "<<size;
                 cout.flush();
                 void* block = scalloc(items, size);
                 if (block == nullptr){
@@ -214,7 +214,7 @@ public:
                 for (int a = 0; a <= pos; a++){
                     iter++;
                 }
-                cout << "test_2:: free address=" << BLOCK_STRT_ADDR(*iter) << endl;
+                cout << "free address=" << BLOCK_STRT_ADDR(*iter) << endl;
                 //printHeapFree();
                 sfree(*iter);
                 assert(validSize(((BlockMetadata*)(*iter))-1));
