@@ -69,7 +69,7 @@ public:
             for (size_t a = 0; a < iter->size; a += step){
                 cout<<setfill('_')<<setw(18)<< a << "|| ";
                 if(a == 6*step){
-                    cout <<setfill('_')<<setw(width)<< "size= " << iter->size <<setw(width-3);
+                    cout <<setfill('_')<<setw(width)<< "size= " << iter->size <<setw(width-2);
                 }
                 else{
                     cout <<setfill('_')<<setw(2*width);
@@ -85,18 +85,13 @@ public:
     void test1(){
         print();
         printHeap();
-        void* a = smalloc(10);
-        print();
-        printList();
-        void* b = smalloc(20);
-        print();
-        printList();
+        void* a = smalloc(100);
+        MemView();
+        void* b = smalloc(200);
+        MemView();
         sfree(a);
-        print();
-        printList();
+        MemView();
         sfree(b);
-        print();
-        printList();
         MemView();
     }
     
