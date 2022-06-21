@@ -160,6 +160,7 @@ public:
                 cout << "test_2:: calloc, items= "<< items <<",    size= "<<size;
                 void* block = scalloc(items, size);
                 if (block == nullptr){
+                    cout << "   address= "<< block << endl;
                     continue;
                 }
                 blocks.push_back(block);
