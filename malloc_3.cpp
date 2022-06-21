@@ -273,9 +273,7 @@ void FreeListInsertBlock(BlockMetadata* free_block){
     while(iter != &list.tail &&  iter->size < free_block->size){
         iter = iter->next_free;
         cout << "iter= " << iter << endl;
-        if (count > 20 ){
-            break;
-        }
+        assert(count < 30);
         count++;
     }
     BlockMetadata* prev = iter->prev_free;
