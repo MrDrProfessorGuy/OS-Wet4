@@ -103,12 +103,13 @@ public:
             return true;
         }
         if (iter->next != &list.tail){
+            char* next = (iter->size + METADATA_SIZE + (char*)iter);
             if ((iter->size + METADATA_SIZE + (char*)iter) != (char*)iter->next){
                 if (print){
                     MemView();
-                    cout << "Expected: " << (iter->size + METADATA_SIZE + (char*)iter) << endl;
+                    cout << "Expected: " << next << endl;
                     cout << "Got: " << (iter->next) << endl;
-                    cout << "Diff: " << (iter->size + METADATA_SIZE + (char*)iter)-(char*)(iter->next) << endl;
+                    cout << "Diff: " << (char*)next-(char*)(iter->next) << endl;
                 }
                 return false;
             }
