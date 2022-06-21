@@ -179,7 +179,7 @@ public:
         for (int a = 0; a < test_num; a++){
             int op = rand()%OPs_NUM;
             int size = rand()%(MMAP_THRESHOLD/12);
-            cout << "test_2[" << a <<"::";
+            cout << "test_2[" << a <<"]::";
             if (op == Malloc){
                 cout << "malloc " << size;
                 cout.flush();
@@ -223,6 +223,7 @@ public:
             else if (op == Realloc){
             
             }
+            cout << endl;
         }
         
         
