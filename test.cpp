@@ -183,7 +183,7 @@ public:
             if (op == Malloc){
                 cout << "test_2:: malloc " << size;
                 cout.flush();
-                //printHeap();
+                printHeap();
                 void* block = smalloc(size);
                 if (block == nullptr){
                     continue;
