@@ -152,14 +152,14 @@ public:
                     continue;
                 }
                 blocks.push_back(block);
-                assert(validSize((BlockMetadata*)block));
+                assert(validSize((BlockMetadata*)block-1));
             }
             else if (op == Calloc){
                 
                 size_t items = rand()%10;
                 cout << "test_2:: calloc, items= "<< items <<",    size= "<<size << endl;
                 blocks.push_back(scalloc(items, size));
-                assert(validSize((BlockMetadata*)blocks.back()));
+                assert(validSize((BlockMetadata*)blocks.back()-1));
             }
             else if (op == Free){
                 if (blocks.empty()){
@@ -172,7 +172,7 @@ public:
                 }
                 cout << "test_2:: free " << (void*)*iter << endl;
                 sfree(*iter);
-                assert(validSize((BlockMetadata*)*iter));
+                assert(validSize((BlockMetadata*)*iter-1));
                 blocks.erase(iter);
             }
             else if (op == Realloc){
