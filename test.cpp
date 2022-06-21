@@ -113,6 +113,15 @@ public:
         }
         std::cout << "------------------------------------------------------------" << std::endl;
     }
+    
+    bool validFreePointer(BlockMetadata* iter){
+        if (iter->is_free){
+            if (iter->next_free != iter->prev_free){
+            
+            }
+        }
+    }
+    
     bool validSize(BlockMetadata* iter, bool print=true){
         if (iter == nullptr){
             return true;
@@ -163,7 +172,7 @@ public:
             if (op == Malloc){
                 cout << "test_2:: malloc " << size;
                 cout.flush();
-                printHeap();
+                //printHeap();
                 void* block = smalloc(size);
                 if (block == nullptr){
                     continue;
@@ -194,7 +203,7 @@ public:
                     iter++;
                 }
                 cout << "test_2:: free address=" << BLOCK_STRT_ADDR(*iter) << endl;
-                printHeapFree();
+                //printHeapFree();
                 sfree(*iter);
                 assert(validSize(((BlockMetadata*)(*iter))-1));
                 blocks.erase(iter);

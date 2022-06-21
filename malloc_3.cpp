@@ -172,8 +172,9 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
     //current + next
     if (next && block->next->is_free){
         total_size += block->next->size + METADATA_SIZE;
-        linkBlocks(block, block->next->next, BlockList);
-        linkBlocks(block, block->next->next, FreeList);
+        BlockMetadata* next = block->next->next;
+        linkBlocks(block, next, BlockList);
+        linkBlocks(block, next, FreeList);
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
     }
@@ -182,8 +183,9 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
     if(prev && block->prev->is_free){
         total_size+=block->prev->size + METADATA_SIZE;
         new_block = block->prev;
-        linkBlocks(block->prev, block->next, BlockList);
-        linkBlocks(block->prev, block->next, FreeList);
+        BlockMetadata* next = block->next;
+        linkBlocks(new_block, next, BlockList);
+        linkBlocks(new_block, next, FreeList);
         
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
@@ -260,12 +262,12 @@ void* smalloc(size_t size){
     }
     else{
         new_block->is_free = false;
-        cout << "##########################################################" << endl;
+        //cout << "##########################################################" << endl;
         cout << "smalloc:: using existing block " << new_block << endl;
-        printHeap();
+        //printHeap();
         linkBlocks(new_block->prev_free, new_block->next_free, FreeList);
-        printHeap();
-        cout << "##########################################################" << endl;
+        //printHeap();
+        //cout << "##########################################################" << endl;
         stats.free_blocks--;
         stats.free_bytes-= new_block->size;
         splitBlock(new_block, size);
@@ -286,20 +288,20 @@ void* scalloc(size_t num, size_t size){
 
 void FreeListInsertBlock(BlockMetadata* free_block){
     BlockMetadata* iter = list.head.next_free;
-    cout << "============= FreeListInsertBlock =============" << endl;
-    cout << "free_block= " << free_block << endl;
+    //cout << "============= FreeListInsertBlock =============" << endl;
+    //cout << "free_block= " << free_block << endl;
     int count = 0;
     while(iter != &list.tail &&  iter->size < free_block->size){
         iter = iter->next_free;
-        cout << "iter= " << iter << endl;
+        //cout << "iter= " << iter << endl;
         assert(count < 30);
         count++;
     }
     BlockMetadata* prev = iter->prev_free;
    
     
-    cout << "iter.prev= " << prev << endl;
-    cout << "============= FreeListInsertBlock END =============" << endl;
+    //cout << "iter.prev= " << prev << endl;
+    //cout << "============= FreeListInsertBlock END =============" << endl;
     
     linkBlocks(free_block, iter, FreeList);
     linkBlocks(prev, free_block, FreeList);
