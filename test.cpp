@@ -116,10 +116,19 @@ public:
     
     bool validFreePointer(BlockMetadata* iter){
         if (iter->is_free){
-            if (iter->next_free != iter->prev_free){
-            
+            if (iter->next_free == iter || iter->prev_free == iter){
+                printHeapFree();
+                return false;
             }
         }
+        return true;
+    }
+    bool validPointer(BlockMetadata* iter){
+        if (iter->next == iter || iter->prev == iter){
+            printHeap();
+            return false;
+        }
+        return true;
     }
     
     bool validSize(BlockMetadata* iter, bool print=true){
@@ -137,6 +146,8 @@ public:
                 }
                 return false;
             }
+            validFreePointer(iter);
+            validPointer(iter);
         }
         return true;
     }
