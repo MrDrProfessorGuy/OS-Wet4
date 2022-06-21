@@ -37,7 +37,7 @@ typedef struct MallocMetadata {
 }BlockMetadata;
 
 #define METADATA_SIZE_UNALLINED sizeof(BlockMetadata)
-#define METADATA_SIZE (METADATA_SIZE_UNALLINED + (8-METADATA_SIZE_UNALLINED%8))
+#define METADATA_SIZE (METADATA_SIZE_UNALLINED)
 
 
 BlockMetadata* findFreeBlock(size_t size);
