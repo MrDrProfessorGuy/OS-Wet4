@@ -106,6 +106,9 @@ public:
             if ((iter->size + METADATA_SIZE + (char*)iter) != (char*)iter->next){
                 if (print){
                     MemView();
+                    cout << "Expected: " << (iter->size + METADATA_SIZE + (char*)iter) << endl;
+                    cout << "Got: " << (iter->next) << endl;
+                    cout << "Diff: " << (iter->size + METADATA_SIZE + (char*)iter)-(char*)(iter->next) << endl;
                 }
                 return false;
             }
