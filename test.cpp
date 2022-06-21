@@ -15,6 +15,9 @@ public:
     
     void print(){
         std::cout << "======================= Print =======================" << std::endl;
+        std::cout << "head= " << &list.head << std::endl;
+        std::cout << "tail= " << &list.tail << std::endl;
+    
         std::cout << "num_free_blocks = " << _num_free_blocks() << std::endl;
         std::cout << "num_free_bytes = " <<  _num_free_bytes() << std::endl;
         std::cout << "num_allocated_blocks = " << _num_allocated_blocks()  << std::endl;
@@ -28,7 +31,7 @@ public:
     
         int counter = 0;
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = (BlockMetadata*)(((char*)iter )+ iter->size + METADATA_SIZE)) {
-            std::cout << "----------- BlockMetaData ["<< counter <<"] -----------" << std::endl;
+            std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
             std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
             std::cout << "      -next= " << iter->next << "     ||      -prev= " << iter->prev << std::endl;
             std::cout << "      -next_free= " << iter->next_free << "       ||      -prev= " << iter->prev_free << std::endl;
