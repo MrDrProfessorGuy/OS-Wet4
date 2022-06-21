@@ -146,21 +146,25 @@ void linkBlocks(BlockMetadata* first, BlockMetadata* second, ListType list_type)
     }
 }
 
-void ListRemove(BlockMetadata* meta_data, ListType list){
+void ListRemove(BlockMetadata* meta_data, bool blockList, bool freeList){
     if (meta_data == NULL){
         return;
     }
-    BlockMetadata* prev = meta_data->prev_free;
-    BlockMetadata* next = meta_data->next_free;
-    linkBlocks(prev, next, list);
-    if (list == BlockList){
+    if (blockList){
+        BlockMetadata* prev = meta_data->prev;
+        BlockMetadata* next = meta_data->next;
+        linkBlocks(prev, next, BlockList);
         meta_data->next = NULL;
         meta_data->prev = NULL;
     }
-    else{
+    if (freeList){
+        BlockMetadata* prev = meta_data->prev_free;
+        BlockMetadata* next = meta_data->next_free;
+        linkBlocks(prev, next, FreeList);
         meta_data->next_free = NULL;
         meta_data->prev_free = NULL;
     }
+
 }
 
 
