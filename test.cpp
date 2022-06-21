@@ -70,8 +70,8 @@ public:
             size_t step = max((iter->size+METADATA_SIZE)/8,(size_t)1);
             for (size_t a = 0; a < iter->size+METADATA_SIZE; a += step){
                 cout<<setfill('_')<<setw(18)<< a << "|| ";
-                if(print == MetaData && a >= METADATA_SIZE){
-                    cout <<setfill('-')<<setw(width)<< "MetaData END" <<setw(width);
+                if(print == MetaData && a+step >= METADATA_SIZE){
+                    cout <<setfill('_')<<setw(width)<< "MetaData END" <<setw(width);
                     print = Size;
                 }
                 else if(print == Size){
