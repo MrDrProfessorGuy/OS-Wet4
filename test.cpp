@@ -147,6 +147,7 @@ public:
             if (op == Malloc){
                 cout << "test_2:: malloc " << size << endl;
                 void* block = smalloc(size);
+                cout << block << endl;
                 if (block == nullptr){
                     continue;
                 }
