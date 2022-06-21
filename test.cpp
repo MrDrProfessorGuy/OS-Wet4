@@ -171,7 +171,7 @@ public:
                 if (blocks.empty()){
                     continue;
                 }
-                int pos = rand()%blocks.size();
+                int pos = rand()%(blocks.size()-1);
                 auto iter = blocks.begin();
                 for (int a = 0; a <= pos; a++){
                     iter++;
