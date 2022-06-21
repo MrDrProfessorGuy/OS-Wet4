@@ -30,7 +30,7 @@ public:
         std::cout << "======================= Print =======================" << std::endl;
     
         int counter = 0;
-        for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = (BlockMetadata*)(((char*)iter )+ iter->size + METADATA_SIZE)) {
+        for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
             std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
             std::cout << "      -next= " << iter->next << "     ||      -prev= " << iter->prev << std::endl;
