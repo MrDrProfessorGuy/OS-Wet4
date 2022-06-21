@@ -378,6 +378,7 @@ void sfree(void* p){
         stats.free_blocks++;
         stats.free_bytes+= block_meta_data->size;
         printHeapFree();
+        cout << "sfree:: block_meta_data= "<< block_meta_data << endl;
         combine(block_meta_data);
     }
    
