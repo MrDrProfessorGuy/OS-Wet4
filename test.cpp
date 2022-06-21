@@ -137,6 +137,7 @@ public:
     void test2(){
         vector<void*> blocks;
         int test_num = 100;
+        srand(87);
         enum OP {Malloc, Calloc, Free, Realloc, OPs_NUM};
         
         for (int a = 0; a < test_num; a++){
