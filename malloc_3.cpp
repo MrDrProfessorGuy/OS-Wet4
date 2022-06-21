@@ -215,11 +215,11 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
     //current + next
     if (next && block->next->is_free){
         total_size += block->next->size + METADATA_SIZE;
-        //BlockMetadata* next = block->next->next;
+        BlockMetadata* next = block->next->next;
         //linkBlocks(block, next, BlockList);
         //linkBlocks(block, next, FreeList);
-        ListRemove(new_block, BlockList);
-        ListRemove(new_block, FreeList);
+        ListRemove(next, BlockList);
+        ListRemove(next, FreeList);
         
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
@@ -232,8 +232,8 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
         //BlockMetadata* next = block->next;
         //linkBlocks(new_block, next, BlockList);
         //linkBlocks(new_block, next, FreeList);
-        ListRemove(new_block, BlockList);
-        ListRemove(new_block, FreeList);
+        ListRemove(block, BlockList);
+        ListRemove(block, FreeList);
         
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
