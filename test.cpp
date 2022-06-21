@@ -2,6 +2,8 @@
 
 #include "malloc_3.cpp"
 #include "iostream"
+#include "iomanip"
+using namespace std;
 
 
 class test{
@@ -42,12 +44,35 @@ public:
     }
     
     void printList(){
+        int width = 15;
         std::cout << "======================= Print List =======================" << std::endl;
         
         int counter = 0;
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
             std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
+            counter++;
+        }
+        std::cout << "------------------------------------------------------------" << std::endl;
+    }
+    
+    void MemView(){
+        int width = 60;
+        std::cout << "======================= Print List =======================" << std::endl;
+        
+        int counter = 0;
+        for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
+            std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
+            cout <<setw(20)<< iter << std::setw(width)<<endl;
+            size_t step = iter->size/12;
+            for (size_t a = 0; a <= iter->size; a += step){
+                cout <<setw(20)<< a << "| "<<setw(width);
+                if(a == 6*step){
+                    cout <<setw(10)<< "-size= " << iter->size <<setw(width)<< "||"<<setw(width)<<"-is_free= " << iter->is_free << std::endl;
+                    continue;
+                }
+                cout <<" |"<<endl;
+            }
             counter++;
         }
         std::cout << "------------------------------------------------------------" << std::endl;

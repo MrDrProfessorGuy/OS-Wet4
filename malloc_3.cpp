@@ -126,7 +126,7 @@ bool largeEnough(size_t size){
 }
 
 void splitBlock(BlockMetadata* block, size_t first_blk_size){
-    assert(block->is_free);
+    //assert(block->is_free);
     size_t new_size = (block->size + METADATA_SIZE) - (first_blk_size + METADATA_SIZE);
     
     if(block->size > first_blk_size && largeEnough(new_size)){
