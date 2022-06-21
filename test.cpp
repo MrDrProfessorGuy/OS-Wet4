@@ -33,13 +33,24 @@ public:
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
             std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
-            std::cout << "      -next= " << iter->next << "     ||      -prev= " << iter->prev << std::endl;
-            std::cout << "      -next_free= " << iter->next_free << "       ||      -prev= " << iter->prev_free << std::endl;
-            std::cout << "---------------------------------------" << std::endl;
+            std::cout << "      -prev= " << iter->prev << "     ||      -next= " << iter->next << std::endl;
+            std::cout << "      -prev_free= " << iter->prev_free << "       ||      -next_free= " << iter->next_free << std::endl;
+            std::cout << "------------------------------------------------------------" << std::endl;
             counter++;
         }
         
+    }
+    
+    void printList(){
+        std::cout << "======================= Print List =======================" << std::endl;
         
+        int counter = 0;
+        for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
+            std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
+            std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
+            counter++;
+        }
+        std::cout << "------------------------------------------------------------" << std::endl;
     }
     
     void test1(){
@@ -47,7 +58,7 @@ public:
         printHeap();
         void* a = smalloc(10);
         print();
-        printHeap();
+        printList();
         
     }
     
