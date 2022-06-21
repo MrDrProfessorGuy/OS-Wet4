@@ -151,13 +151,17 @@ public:
                     continue;
                 }
                 blocks.push_back(block);
-                assert(validSize((BlockMetadata*)block-1));
+                assert(validSize(((BlockMetadata*)block)-1));
             }
             else if (op == Calloc){
                 size_t items = rand()%10;
                 cout << "test_2:: calloc, items= "<< items <<",    size= "<<size << endl;
-                blocks.push_back(scalloc(items, size));
-                assert(validSize((BlockMetadata*)blocks.back()-1));
+                void* block = scalloc(items, size);
+                if (block == nullptr){
+                    continue;
+                }
+                blocks.push_back(block);
+                assert(validSize(((BlockMetadata*)block)-1)));
             }
             else if (op == Free){
                 if (blocks.empty()){
