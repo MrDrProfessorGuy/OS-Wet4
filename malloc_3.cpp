@@ -80,7 +80,6 @@ static struct List mmap_list {.head = {.size = 0, .is_free = false, .next = &(mm
 /// ========================================== Helper Functions ========================================== ///
 /// ====================================================================================================== ///
 
-void ListRemove(BlockMetadata* meta_data, ListType list);
 
 void printHeap(){
     std::cout << "======================= PrintHeap =======================" << std::endl;
@@ -222,8 +221,7 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
         BlockMetadata* next = block->next->next;
         //linkBlocks(block, next, BlockList);
         //linkBlocks(block, next, FreeList);
-        ListRemove(next, BlockList);
-        ListRemove(next, FreeList);
+        ListRemove(next, true, true);
         
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
@@ -236,8 +234,8 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
         //BlockMetadata* next = block->next;
         //linkBlocks(new_block, next, BlockList);
         //linkBlocks(new_block, next, FreeList);
-        ListRemove(block, BlockList);
-        ListRemove(block, FreeList);
+        ListRemove(block, true, true);
+        
         
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
