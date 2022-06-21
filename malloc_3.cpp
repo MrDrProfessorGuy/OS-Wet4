@@ -39,20 +39,6 @@ typedef struct MallocMetadata {
 #define METADATA_SIZE_UNALLINED sizeof(BlockMetadata)
 #define METADATA_SIZE (METADATA_SIZE_UNALLINED)
 
-void printHeap(){
-    std::cout << "======================= PrintHeap =======================" << std::endl;
-    
-    int counter = 0;
-    for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
-        std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
-        std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
-        std::cout << "      -prev= " << iter->prev << "     ||      -next= " << iter->next << std::endl;
-        std::cout << "      -prev_free= " << iter->prev_free << "       ||      -next_free= " << iter->next_free << std::endl;
-        std::cout << "------------------------------------------------------------" << std::endl;
-        counter++;
-    }
-    
-}
 
 BlockMetadata* findFreeBlock(size_t size);
 void FreeListInsertBlock(BlockMetadata* free_block);
@@ -94,6 +80,20 @@ static struct List mmap_list {.head = {.size = 0, .is_free = false, .next = &(mm
 /// ====================================================================================================== ///
 
 
+void printHeap(){
+    std::cout << "======================= PrintHeap =======================" << std::endl;
+    
+    int counter = 0;
+    for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
+        std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
+        std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
+        std::cout << "      -prev= " << iter->prev << "     ||      -next= " << iter->next << std::endl;
+        std::cout << "      -prev_free= " << iter->prev_free << "       ||      -next_free= " << iter->next_free << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        counter++;
+    }
+    
+}
 BlockMetadata* findFreeBlock(size_t size){
     BlockMetadata* iter = list.head.next_free;
     while(iter != &list.tail){
