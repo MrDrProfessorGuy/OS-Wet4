@@ -271,11 +271,11 @@ void FreeListInsertBlock(BlockMetadata* free_block){
         iter = iter->next_free;
     }
     BlockMetadata* prev = iter->prev_free;
-    cout << "============= FreeListInsertBlock =============" << endl;
-    cout << "free_block= " << free_block << endl;
-    cout << "iter= " << iter << endl;
-    cout << "iter.prev= " << prev << endl;
-    cout << "============= FreeListInsertBlock END =============" << endl;
+    //cout << "============= FreeListInsertBlock =============" << endl;
+    //cout << "free_block= " << free_block << endl;
+    //cout << "iter= " << iter << endl;
+    //cout << "iter.prev= " << prev << endl;
+    //cout << "============= FreeListInsertBlock END =============" << endl;
     
     linkBlocks(free_block, iter, FreeList);
     linkBlocks(prev, free_block, FreeList);
