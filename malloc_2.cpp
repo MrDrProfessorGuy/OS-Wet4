@@ -135,13 +135,21 @@ void sfree(void* p){
 
 
 void* srealloc(void* oldp, size_t size){
-    BlockMetadata* block_meta_data = (BlockMetadata*)oldp - 1;
-    if(oldp == NULL || block_meta_data->size < size){
+    if(oldp == NULL){
         void* res = smalloc(size);
         if(res == NULL){
             return NULL;
         }
         
+        return res;
+    }
+    BlockMetadata* block_meta_data = (BlockMetadata*)oldp - 1;
+    if(block_meta_data->size < size){
+        void* res = smalloc(size);
+        if(res == NULL){
+            return NULL;
+        }
+    
         memmove(res, oldp, block_meta_data->size);
         sfree(oldp);
         return res;
