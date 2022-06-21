@@ -145,7 +145,11 @@ public:
             
             if (op == Malloc){
                 cout << "test_2:: malloc " << size << endl;
-                blocks.push_back(smalloc(size));
+                void* block = smalloc(size);
+                if (block == nullptr){
+                    continue;
+                }
+                blocks.push_back(block);
                 assert(validSize((BlockMetadata*)blocks.back()));
             }
             else if (op == Calloc){
