@@ -132,8 +132,6 @@ BlockMetadata* findFreeBlock(size_t size){
     
 }
 
-
-
 void linkBlocks(BlockMetadata* first, BlockMetadata* second, ListType list_type){
     if(list_type == BlockList){
         first->next = second;
@@ -163,7 +161,6 @@ void ListRemove(BlockMetadata* meta_data, bool blockList, bool freeList){
         meta_data->next_free = NULL;
         meta_data->prev_free = NULL;
     }
-
 }
 
 
@@ -240,7 +237,9 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
     }
+    ListRemove(new_block, false, true);
     new_block->size = total_size;
+    FreeListInsertBlock(new_block);
     return new_block;
 }
 BlockMetadata* initWilde(size_t size){
