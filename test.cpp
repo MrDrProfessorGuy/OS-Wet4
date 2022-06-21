@@ -63,10 +63,10 @@ public:
         int counter = 0;
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
-            cout <<setw(20)<< iter << std::setw(width)<<endl;
+            cout << iter<<setw(16) << std::setw(width)<<endl;
             size_t step = iter->size/12;
-            for (size_t a = 0; a <= iter->size; a += step){
-                cout <<setw(20)<< a << "| "<<setw(width);
+            for (size_t a = 0; a < iter->size; a += step){
+                cout << a <<setw(16)<< "| "<<setw(width);
                 if(a == 6*step){
                     cout <<setw(10)<< "-size= " << iter->size <<setw(width)<< "||"<<setw(width)<<"-is_free= " << iter->is_free << std::endl;
                     continue;
