@@ -181,7 +181,6 @@ BlockMetadata* initWilde(size_t size){
     BlockMetadata* new_block = (BlockMetadata*) sbrk((intptr_t) (size - list.tail.prev->size));
     //cout <<"initWilde:: new size= "<< size - list.tail.prev->size << "    new_block= "<< new_block << endl;
     if(new_block == (void*)-1){
-        cout << "NO"<< endl;
         return NULL;
     }
     list.tail.prev->is_free = false;
@@ -230,7 +229,10 @@ void* smalloc(size_t size){
             linkBlocks(new_block, &list.tail, BlockList);
         }
         else if (list.tail.prev->is_free){
-            new_block = initWilde(size);
+            if (initWilde(size) == NULL){
+                return NULL;
+            }
+            new_block = list.tail.prev;
             linkBlocks(new_block->prev_free, new_block->next_free, FreeList);
         }
         else{ //Insert Last
