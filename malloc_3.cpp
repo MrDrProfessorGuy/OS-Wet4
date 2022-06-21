@@ -105,6 +105,10 @@ BlockMetadata* findFreeBlock(size_t size){
     BlockMetadata* iter = list.head.next_free;
     while(iter != &list.tail){
         if(size <= iter->size){
+            if (!iter->is_free){
+                cout << "ERROR::findFreeBlock:: address=" << iter << " is NOT free" << endl;
+                printHeap();
+            }
             assert(iter->is_free);
             return iter;
         }
@@ -271,7 +275,7 @@ void* smalloc(size_t size){
     else{
         
         //cout << "##########################################################" << endl;
-        cout << "smalloc:: using existing block " << new_block << endl;
+        //cout << "smalloc:: using existing block " << new_block << endl;
         //printHeap();
         new_block->is_free = false;
         linkBlocks(new_block->prev_free, new_block->next_free, FreeList);
