@@ -273,11 +273,11 @@ public:
         MemView();
     }
 
-    void test2(){
+    void test2(int seed){
         vector<void*> blocks;
         int test_num = 100;
         //srand(872);
-        srand(31);
+        srand(seed);
         enum OP {Malloc, Calloc, Free, Realloc, OPs_NUM};
         
         int num_of_errors = 0;
@@ -350,7 +350,12 @@ public:
 
 int main(int argc,char* argv[]) {
     test a;
-    a.test2();
+    int seed = 1;
+    if (argc > 1){
+        seed = atoi(argv[1]);
+    }
+    
+    a.test2(seed);
     
     return 0;
 }
