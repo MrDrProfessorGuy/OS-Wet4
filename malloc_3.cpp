@@ -319,16 +319,14 @@ BlockMetadata* initWilde(size_t data_size, bool blockIsFree=true){
         return NULL;
     }
     
-    ListRemove(wilderness, false, true);
-    wilderness->is_free = false;
-    
     stats.allocated_bytes+= (data_size - wilderness->size);
     if (blockIsFree){
         stats.free_blocks--;
         stats.free_bytes -= wilderness->size;
+        ListRemove(wilderness, false, true);
     }
     
-    
+    wilderness->is_free = false;
     wilderness->size = data_size;
     
     return wilderness;
