@@ -27,6 +27,8 @@ ostream& colorIt(ostream& stream, bool a){
 }
 
 
+
+
 class test{
 public:
     size_t allocated_blocks;
@@ -79,12 +81,12 @@ public:
         
         
         cout << "======================= print_stats =======================" << std::endl;
-        colorIt(cout, allBlocks) << "num_allocated_blocks =    Expected: " << allocated_blocks << "        Got: "<< _num_allocated_blocks()  << std::endl;
-        std::cout << "num_allocated_bytes =     Expected: " << allocated_bytes << "        Got: "<< _num_allocated_bytes() << std::endl;
-        std::cout << "num_free_blocks:          Expected: " << free_blocks << "        Got: "<< _num_free_blocks() << std::endl;
-        std::cout << "num_free_bytes =          Expected: " << free_bytes << "        Got: "<< _num_free_bytes() << std::endl;
-        std::cout << "num_meta_bytes =          Expected: " << num_meta_bytes << "        Got: "<< _num_meta_data_bytes() << std::endl;
-        std::cout << "size_meta_data =          Expected: " << meta_data_size << "        Got: "<< _size_meta_data() << std::endl;
+        colorIt(cout, allBlocks) << "num_allocated_blocks =    Expected: " << allocated_blocks << "        Got: "<< _num_allocated_blocks()  <<RST<< std::endl;
+        colorIt(cout, allBytes) << "num_allocated_bytes =     Expected: " << allocated_bytes << "        Got: "<< _num_allocated_bytes() <<RST<< std::endl;
+        colorIt(cout, freeBlocks) << "num_free_blocks:          Expected: " << free_blocks << "        Got: "<< _num_free_blocks() <<RST<< std::endl;
+        colorIt(cout, freeBytes) << "num_free_bytes =          Expected: " << free_bytes << "        Got: "<< _num_free_bytes() <<RST<< std::endl;
+        colorIt(cout, metaBytes) << "num_meta_bytes =          Expected: " << num_meta_bytes << "        Got: "<< _num_meta_data_bytes() <<RST<< std::endl;
+        std::cout << "size_meta_data =          Expected: " << meta_data_size << "        Got: "<< _size_meta_data() <<RST<< std::endl;
         cout << "======================= End =======================" << std::endl;
         
     }
@@ -97,7 +99,7 @@ public:
         bool metaBytes = num_meta_bytes == _num_meta_data_bytes();
         
         if (print || !allBlocks || !allBytes || !freeBlocks || !freeBytes || !metaBytes){
-            cout << "======================= ERROR:: Invalid Stats =======================" << endl;
+            //cout << "======================= ERROR:: Invalid Stats =======================" << endl;
             //printHeap();
             print_stats();
             return false;
