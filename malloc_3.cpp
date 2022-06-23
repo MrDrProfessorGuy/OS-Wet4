@@ -293,8 +293,10 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true, boo
     }
     
     new_block->size = total_size;
-    ListRemove(new_block, false, true);
-    FreeListInsertBlock(new_block);
+    if (blockIsFree){
+        ListRemove(new_block, false, true);
+        FreeListInsertBlock(new_block);
+    }
     return new_block;
 }
 
