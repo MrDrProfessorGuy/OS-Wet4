@@ -315,7 +315,7 @@ void* smalloc(size_t data_size){
     data_size = MUL_SIZE(data_size);
     
     if(data_size >= MMAP_THRESHOLD){
-        BlockMetadata* new_region = (BlockMetadata*) mmap(NULL, data_size + METADATA_SIZE, PROT_READ | PROT_WRITE, MAP_ANONYMOUS , -1, 0);
+        BlockMetadata* new_region = (BlockMetadata*) mmap(NULL, data_size + METADATA_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS , -1, 0);
         if(new_region == MAP_FAILED){
             return NULL;
         }
@@ -323,8 +323,8 @@ void* smalloc(size_t data_size){
         new_region->is_free = false;
         new_region->size = data_size;
         BlockMetadata* next = mmap_list.head.next;
-        linkBlocks(&(mmap_list.head), new_region, BlockList);
-        linkBlocks(new_region, next, BlockList);
+        ///linkBlocks(&(mmap_list.head), new_region, BlockList);
+        ///linkBlocks(new_region, next, BlockList);
         //linkBlocks(new_region, new_region, FreeList);
         
         stats.allocated_blocks++;
@@ -428,7 +428,7 @@ void sfree(void* p){
     }
     //block_meta_data->is_free = true;
     if (block_meta_data->size >= MMAP_THRESHOLD){
-        ListRemove(block_meta_data, true, false);
+        ///ListRemove(block_meta_data, true, false);
         munmap(block_meta_data, block_meta_data->size + METADATA_SIZE);
         
         stats.allocated_blocks--;
