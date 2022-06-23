@@ -4,9 +4,28 @@
 #include "iostream"
 #include "iomanip"
 #include "vector"
+#include "colors.h"
 using namespace std;
 
 #define BLOCK_STRT_ADDR(block) (((BlockMetadata*)(block))-1)
+
+
+#ifdef USE_COLORS
+    #define PRED(x) FRED(x)
+    #define PGRN(x) FGRN(x)
+#endif
+#ifndef USE_COLORS
+#define PRED(x) x
+#define PGRN(x) x
+#endif
+
+ostream& colorIt(ostream& stream, bool a){
+    if (a){
+        return  stream << KGRN;
+    }
+    return stream << KRED;
+}
+
 
 class test{
 public:
@@ -52,8 +71,15 @@ public:
         cout <<left<<setfill(' ')<<setw(line_width)<<str2 << data2 << std::endl;
     }
     void print_stats(){
+        bool allBlocks = allocated_blocks == _num_allocated_blocks();
+        bool allBytes = allocated_bytes == _num_allocated_bytes();
+        bool freeBlocks = free_blocks == _num_free_blocks();
+        bool freeBytes = free_bytes == _num_free_bytes();
+        bool metaBytes = num_meta_bytes == _num_meta_data_bytes();
+        
+        
         cout << "======================= print_stats =======================" << std::endl;
-        std::cout << "num_allocated_blocks =    Expected: " << allocated_blocks << "        Got: "<< _num_allocated_blocks()  << std::endl;
+        colorIt(cout, allBlocks) << "num_allocated_blocks =    Expected: " << allocated_blocks << "        Got: "<< _num_allocated_blocks()  << std::endl;
         std::cout << "num_allocated_bytes =     Expected: " << allocated_bytes << "        Got: "<< _num_allocated_bytes() << std::endl;
         std::cout << "num_free_blocks:          Expected: " << free_blocks << "        Got: "<< _num_free_blocks() << std::endl;
         std::cout << "num_free_bytes =          Expected: " << free_bytes << "        Got: "<< _num_free_bytes() << std::endl;
