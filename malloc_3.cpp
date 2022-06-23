@@ -460,7 +460,7 @@ void* srealloc(void* oldp, size_t size){
     }
     BlockMetadata* block = (BlockMetadata*)oldp - 1;
     if (block->size >= MUL_SIZE(size)){ /// a
-        FreeListInsertBlock(block);
+        //FreeListInsertBlock(block);
         splitBlock(block, MUL_SIZE(size));
         return block+1;
     }
