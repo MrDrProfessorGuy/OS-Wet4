@@ -443,9 +443,9 @@ public:
                 cout << size;
                 
                 BlockMetadata* block = get_block(block_num);
-                //cout << "   address: " << block << endl;
+                cout << "   address: " << block << endl;
                 
-                BlockMetadata* new_block = (BlockMetadata*)srealloc(block, size);
+                BlockMetadata* new_block = (BlockMetadata*)srealloc(block-1, size);
                 cout << "   block["<<block_num<<"]: " << block << "   Relocated to" << new_block << endl;
     
             }
