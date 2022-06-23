@@ -106,6 +106,20 @@ public:
         }
         
     }
+    void print_mmap(){
+        std::cout << "======================= PrintHeap =======================" << std::endl;
+        
+        int counter = 0;
+        for (BlockMetadata* iter = &mmap_list.head; iter != nullptr ; iter = iter->next) {
+            std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
+            std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
+            std::cout << "      -prev= " << iter->prev << "     ||      -next= " << iter->next << std::endl;
+            std::cout << "      -prev_free= " << iter->prev_free << "       ||      -next_free= " << iter->next_free << std::endl;
+            std::cout << "------------------------------------------------------------" << std::endl;
+            counter++;
+        }
+        
+    }
     void printHeapFree(){
         std::cout << "======================= PrintHeapFree =======================" << std::endl;
         
@@ -258,7 +272,7 @@ public:
     void test1(){
         print();
         printHeap();
-        void* a = smalloc(1000);
+        void* a = smalloc(MMAP_THRESHOLD);
         MemView();
         void* b = smalloc(200);
         MemView();
@@ -271,6 +285,20 @@ public:
         MemView();
         sfree(c);
         MemView();
+    }
+    
+    void test_mmap(){
+        void* a = smalloc(MMAP_THRESHOLD);
+        print_mmap();
+    
+        void* b = smalloc(MMAP_THRESHOLD);
+        print_mmap();
+    
+        sfree(a);
+        print_mmap();
+    
+        sfree(b);
+        print_mmap();
     }
 
     void test2(int seed){
@@ -350,6 +378,9 @@ public:
 
 int main(int argc,char* argv[]) {
     test a;
+    
+    a.test_mmap();
+    
     int seed = 1;
     if (argc > 1){
         seed = atoi(argv[1]);
