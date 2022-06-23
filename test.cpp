@@ -157,8 +157,8 @@ public:
         int width = 10;
         ///Line 1 - Title
         
-        cout <<2*width*'='<< " BlockMetaData["<< counter <<"] "<< iter;
-        cout <<4*width*'='<< std::endl;
+        cout <<string(2*width, '=')<< " BlockMetaData["<< counter <<"] "<< iter << string(2*width, '=')<<endl;
+        
         ///Line 2
         cout <<setfill(' ')<<setw(width)<< "size= " << iter->size ;
         cout <<setfill(' ')<<setw(width)<< " || ";
@@ -172,7 +172,7 @@ public:
         cout <<setw(width)<< " || ";
         cout <<setw(width)<<"next_free= " << iter->next_free << std::endl;
         ///Line 4 - End
-        cout <<2*width*'-'<< endl;
+        cout <<string(4*width, '-')<< endl;
     }
     
     void validateHeap(){
