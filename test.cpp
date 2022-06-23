@@ -462,7 +462,7 @@ public:
 int main(int argc,char* argv[]) {
     test a;
     
-    a.test1();
+    //a.test1();
     a.dynamic_test();
     
     int seed = 1;
