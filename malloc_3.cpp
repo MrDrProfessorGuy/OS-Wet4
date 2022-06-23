@@ -276,16 +276,18 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true, boo
         //BlockMetadata* next = block->next;
         //linkBlocks(new_block, next, BlockList);
         //linkBlocks(new_block, next, FreeList);
-        ListRemove(block, true, true);
         
         
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
         stats.free_blocks--;
         if (blockIsFree){
+            ListRemove(block, true, true);
             stats.free_bytes += METADATA_SIZE;
         }
         else{
+            ListRemove(block, true, false);
+            ListRemove(new_block, false, true);
             stats.free_bytes -= new_block->size;
         }
         
