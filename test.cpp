@@ -413,7 +413,7 @@ public:
                     cout << "NULL" << endl;
                     continue;
                 }
-                cout << data << endl;
+                cout << data-1 << endl;
                 blocks.push_back(data);
             }
             else if(operation == "calloc"){
@@ -430,7 +430,7 @@ public:
                     cout << "NULL" << endl;
                     continue;
                 }
-                cout << data << endl;
+                cout << data-1 << endl;
                 blocks.push_back(data);
             }
             else if(operation == "realloc"){
@@ -446,7 +446,7 @@ public:
                 cout << "   address: " << block << endl;
                 
                 BlockMetadata* new_block = (BlockMetadata*)srealloc(block+1, size);
-                cout << "   block["<<block_num<<"]: " << block << "   Relocated to " << new_block << endl;
+                cout << "   block["<<block_num<<"]: " << block << "   Relocated to " << new_block-1 << endl;
     
             }
             else if(operation == "free"){

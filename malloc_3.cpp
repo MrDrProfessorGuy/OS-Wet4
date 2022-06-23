@@ -466,10 +466,10 @@ void* srealloc(void* oldp, size_t size){
     }
     
     
-    bool merge_prev = (IS_FREE(block->prev) && (block->prev->size + block->size >= MUL_SIZE(size)));
-    bool merge_next = (IS_FREE(block->next) && (block->next->size + block->size >= MUL_SIZE(size)));
+    bool merge_prev = (IS_FREE(block->prev) && (block->prev->size + block->size + METADATA_SIZE >= MUL_SIZE(size)));
+    bool merge_next = (IS_FREE(block->next) && (block->next->size + block->size + METADATA_SIZE >= MUL_SIZE(size)));
     bool merge_all = (IS_FREE(block->prev)) && IS_FREE(block->next) && (block->prev->size + block->size +
-                                                                        block->next->size >= MUL_SIZE(size));
+                                                                        block->next->size + 2*METADATA_SIZE >= MUL_SIZE(size));
     
     BlockMetadata* tmp_data = (BlockMetadata*) mmap(NULL, MUL_SIZE(size), PROT_READ | PROT_WRITE, MAP_ANONYMOUS , -1, 0);
     if(tmp_data == MAP_FAILED){
