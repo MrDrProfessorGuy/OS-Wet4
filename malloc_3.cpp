@@ -159,7 +159,12 @@ void ListRemove(BlockMetadata* meta_data, bool blockList, bool freeList){
         meta_data->prev = NULL;
     }
     if (freeList){
-        assert(meta_data->is_free == true);
+        if (meta_data->is_free == false){
+            printHeap();
+            assert(meta_data->is_free == true);
+        }
+        
+        
         meta_data->is_free = false;
         BlockMetadata* prev = meta_data->prev_free;
         BlockMetadata* next = meta_data->next_free;
