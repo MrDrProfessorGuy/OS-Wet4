@@ -446,7 +446,7 @@ public:
                 cout << "   address: " << block << endl;
                 
                 BlockMetadata* new_block = (BlockMetadata*)srealloc(block+1, size);
-                cout << "   block["<<block_num<<"]: " << block << "   Relocated to" << new_block << endl;
+                cout << "   block["<<block_num<<"]: " << block << "   Relocated to " << new_block << endl;
     
             }
             else if(operation == "free"){

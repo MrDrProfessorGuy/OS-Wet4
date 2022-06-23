@@ -206,7 +206,7 @@ bool largeEnough(size_t size){
  * split if largeEnough
  */
 void splitBlock(BlockMetadata* block, size_t first_blk_size){
-    assert(block->is_free);
+    //assert(block->is_free);
     size_t new_size = (block->size) - (first_blk_size + METADATA_SIZE);
     
     //cout << "splitBlock:: first_blk_size: " << first_blk_size << "      new_size: " << new_size << endl;
@@ -382,7 +382,6 @@ void* smalloc(size_t data_size){
     return (new_block + 1);
 }
 
-
 void* scalloc(size_t num, size_t size){
     void* res = smalloc(num * size);
     if(res == NULL){
@@ -461,6 +460,7 @@ void* srealloc(void* oldp, size_t size){
     }
     BlockMetadata* block = (BlockMetadata*)oldp - 1;
     if (block->size >= MUL_SIZE(size)){ /// a
+        FreeListInsertBlock(block);
         splitBlock(block, MUL_SIZE(size));
         return block+1;
     }
