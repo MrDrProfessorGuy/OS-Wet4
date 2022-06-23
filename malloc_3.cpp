@@ -160,6 +160,7 @@ void ListRemove(BlockMetadata* meta_data, bool blockList, bool freeList){
     }
     if (freeList){
         if (meta_data->is_free == false){
+            cout << "ERROR::findFreeBlock:: address=" << meta_data << " is NOT free" << endl;
             printHeap();
             assert(meta_data->is_free == true);
         }
