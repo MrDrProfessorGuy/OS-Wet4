@@ -336,7 +336,7 @@ BlockMetadata* initWilde(size_t data_size, bool blockIsFree=true){
 /// ========================================== Malloc Functions ========================================== ///
 /// ====================================================================================================== ///
 void* smalloc(size_t data_size){
-    if(data_size == 0 || MUL_SIZE(data_size) > MAX_SIZE){
+    if(data_size <= 0 || MUL_SIZE(data_size) > MAX_SIZE){
         return NULL;
     }
     data_size = MUL_SIZE(data_size);
@@ -474,7 +474,9 @@ void sfree(void* p){
 void* srealloc(void* oldp, size_t size){
     cout << string(30, '=') <<" Realloc "<< string(30, '=') << endl;
     cout<< string(8, ' ') << "oldp: " << oldp << "   size: " << size << endl;
-    
+    if (size <= 0){
+        return NULL;
+    }
     if (MUL_SIZE(size) >= MMAP_THRESHOLD){
         cout<< string(8, ' ') << "MUL_SIZE(size) >= MMAP_THRESHOLD " << endl;
         sfree(oldp);

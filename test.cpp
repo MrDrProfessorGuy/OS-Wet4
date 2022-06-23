@@ -435,7 +435,8 @@ public:
         string str_num_elements = "";
         string str_print_options = "";
         
-        bool print_stats = true;
+        bool print_stats = false;
+        bool print_mmap = false;
         size_t block_num, size, num_elements;
         
         while (operation != "exit"){
@@ -511,6 +512,10 @@ public:
                 }
                 if (str_print_options == "no"){
                     print_stats = false;
+                    print_mmap = false;
+                }
+                if (str_print_options == "mmap"){
+                    print_mmap = true;
                 }
             }
             else if(operation == "preset"){
@@ -527,6 +532,9 @@ public:
             printList();
             if (print_stats){
                 validStats(true);
+            }
+            if (print_mmap){
+                print_mmap();
             }
             
         }/// end while
