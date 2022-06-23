@@ -72,6 +72,7 @@ public:
         
         if (!allBlocks || !allBytes || !freeBlocks || !freeBytes || !metaBytes){
             cout << "======================= ERROR:: Invalid Stats =======================" << endl;
+            printHeap();
             print_stats();
             return false;
         }
