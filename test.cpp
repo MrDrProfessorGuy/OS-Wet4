@@ -445,7 +445,7 @@ public:
                 BlockMetadata* block = get_block(block_num);
                 cout << "   address: " << block << endl;
     
-                sfree(block);
+                sfree(block+1);
             }
             
             
