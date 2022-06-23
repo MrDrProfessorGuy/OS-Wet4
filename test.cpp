@@ -86,7 +86,7 @@ public:
         colorIt(cout, freeBlocks) << "num_free_blocks:          Expected: " << free_blocks << "        Got: "<< _num_free_blocks() <<RST<< std::endl;
         colorIt(cout, freeBytes) << "num_free_bytes =          Expected: " << free_bytes << "        Got: "<< _num_free_bytes() <<RST<< std::endl;
         colorIt(cout, metaBytes) << "num_meta_bytes =          Expected: " << num_meta_bytes << "        Got: "<< _num_meta_data_bytes() <<RST<< std::endl;
-        std::cout << "size_meta_data =          Expected: " << meta_data_size << "        Got: "<< _size_meta_data() <<RST<< std::endl;
+        //colorIt(cout, true) << "size_meta_data =          Expected: " << meta_data_size << "        Got: "<< _size_meta_data() <<RST<< std::endl;
         cout << "======================= End =======================" << std::endl;
         
     }
