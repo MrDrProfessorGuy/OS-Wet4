@@ -594,10 +594,11 @@ void* srealloc(void* oldp, size_t size){
     }
     else{/// g + h
         cout << string(8, '~') <<" Realloc::G + H " << endl;
+        
+        block = (BlockMetadata*)smalloc(MUL_SIZE(size));
+        sfree(oldp);
         memmove(block+1, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
-        sfree(oldp);
-        block = (BlockMetadata*)smalloc(MUL_SIZE(size));
     }
     
     cout << string(30, '=') <<" Realloc End "<< string(30, '=') << endl;
