@@ -277,7 +277,7 @@ public:
         vector<void*> blocks;
         int test_num = 100;
         //srand(872);
-        srand(32);
+        srand(31);
         enum OP {Malloc, Calloc, Free, Realloc, OPs_NUM};
         
         int num_of_errors = 0;
@@ -338,8 +338,9 @@ public:
         
         
         cout << string(30, '=') << endl;
-        cout << string(9, '=') << " Test Ended " << string(9, '=') << endl;
+        cout << string(9, '=') << " Test Ended " << string(9, '=') << endl<<endl;
         cout << "Total Errors: " << num_of_errors << endl;
+        cout <<endl<< string(30, '=') << endl;
         
     }
 };
