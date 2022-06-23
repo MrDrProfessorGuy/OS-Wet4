@@ -275,7 +275,7 @@ public:
 
     void test2(int seed){
         vector<void*> blocks;
-        int test_num = 100;
+        int test_num = 1000;
         //srand(872);
         srand(seed);
         enum OP {Malloc, Calloc, Free, Realloc, OPs_NUM};
