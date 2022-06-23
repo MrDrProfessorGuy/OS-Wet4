@@ -154,13 +154,13 @@ public:
     }
     
     void printBlock(BlockMetadata* iter, int counter){
-        int width = 20;
+        int width = 14;
         int h = 4;
         ///Line 1 - Title
         cout <<string(2*width, '=')<< " BlockMetaData["<< counter <<"] "<< iter << string(2*width, '=')<<endl;
         
         ///Line 2
-        cout <<left<<setfill(' ')<<string(h, ' ')<<setw(width)<< "size= " << iter->size ;
+        cout <<left<<setfill(' ')<<string(h, ' ')<<setw(width)<< "size= " <<left<< iter->size ;
         cout <<right<<string(h, ' ')<< " || "<<string(h, ' ');
         cout <<left<<setfill(' ')<<setw(width)<<"is_free= " << iter->is_free << std::endl;
         ///Line 3 - BlockList
