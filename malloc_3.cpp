@@ -275,17 +275,17 @@ BlockMetadata* initWilde(size_t data_size){
     assert(wilderness->is_free);
     assert(wilderness != &list.head);
     
-    if (data_size < wilderness->size){
+    if (data_size <= wilderness->size){
         cout << "ERROR::initWilde:: address=" << wilderness << " is already big enough" << endl;
         printHeap();
-        assert(data_size < wilderness->size);
+        assert(data_size <= wilderness->size);
     }
     BlockMetadata* new_block = (BlockMetadata*) sbrk((intptr_t) (data_size - wilderness->size));
     //cout <<"initWilde:: new size= "<< size - list.tail.prev->size << "    new_block= "<< new_block << endl;
     if(new_block == (void*)-1){
         return NULL;
     }
-    wilderness->is_free = false;
+    //wilderness->is_free = false;
     wilderness->size = data_size;
     
     stats.allocated_bytes+= data_size;
