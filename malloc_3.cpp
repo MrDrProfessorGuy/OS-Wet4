@@ -17,7 +17,7 @@ using namespace std;
 void* srealloc(void* oldp, size_t size);
 void sfree(void* p);
 void* scalloc(size_t num, size_t size);
-void* smalloc(size_t size);
+void* smalloc(size_t data_size);
 // ############################### Helper Functions ###############################
 size_t _num_free_blocks();
 size_t _num_free_bytes();
@@ -53,6 +53,9 @@ typedef struct Stats {
 }Stats;
 
 inline size_t MUL_SIZE(size_t size){
+    if (size%8 == 0){
+        return size;
+    }
     return (size + (8-size%8));
 }
 static Stats stats = {.free_blocks = 0, .free_bytes = 0, .allocated_blocks = 0, .allocated_bytes = 0, .meta_data = sizeof(BlockMetadata)};
@@ -147,6 +150,7 @@ void ListRemove(BlockMetadata* meta_data, bool blockList, bool freeList){
     if (meta_data == NULL){
         return;
     }
+    
     if (blockList){
         BlockMetadata* prev = meta_data->prev;
         BlockMetadata* next = meta_data->next;
@@ -155,6 +159,8 @@ void ListRemove(BlockMetadata* meta_data, bool blockList, bool freeList){
         meta_data->prev = NULL;
     }
     if (freeList){
+        assert(meta_data->is_free == true);
+        meta_data->is_free = false;
         BlockMetadata* prev = meta_data->prev_free;
         BlockMetadata* next = meta_data->next_free;
         linkBlocks(prev, next, FreeList);
@@ -172,6 +178,9 @@ BlockMetadata* initBlock(size_t size){
     allocated_block->is_free = false;
     allocated_block->size = size;
     
+    allocated_block->next_free = NULL;
+    allocated_block->prev_free = NULL;
+    
     stats.allocated_blocks++;
     stats.allocated_bytes+= size;
     return allocated_block;
@@ -184,29 +193,39 @@ bool largeEnough(size_t size){
     return true;
 }
 
+
+
+/*
+ * Get an address to start of MetaData of a free block and required data size,
+ * split if largeEnough
+ */
 void splitBlock(BlockMetadata* block, size_t first_blk_size){
-    //assert(block->is_free);
+    assert(block->is_free);
     size_t new_size = (block->size) - (first_blk_size + METADATA_SIZE);
     
     if(block->size > first_blk_size && largeEnough(new_size)){
         BlockMetadata* new_block = (BlockMetadata*)((char*)block + METADATA_SIZE + first_blk_size);
         //Update MetaData
         block->size = first_blk_size;
-        block->is_free = false;
+        //ListRemove(block, false, true);
+        
         new_block->size = new_size;
-        new_block->is_free = true;
-
-        linkBlocks(block->prev_free, block->next_free, FreeList);
-
+        //new_block->is_free = true;
+        
         BlockMetadata* block_next = block->next;
         linkBlocks(block, new_block, BlockList);
-        linkBlocks(new_block,block_next, BlockList);
+        linkBlocks(new_block, block_next, BlockList);
+        
         FreeListInsertBlock(new_block);
         
         stats.allocated_blocks++;
         stats.allocated_bytes -= METADATA_SIZE;
     }
 }
+
+/*
+ * Get an address to start of MetaData of a free block and combine with neighbours if possible
+ */
 BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
     assert(block->is_free);
     size_t total_size = block->size;
@@ -215,7 +234,7 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
     //current + next
     if (next && block->next->is_free){
         total_size += block->next->size + METADATA_SIZE;
-        BlockMetadata* next = block->next->next;
+        BlockMetadata* next = block->next;///->next;
         //linkBlocks(block, next, BlockList);
         //linkBlocks(block, next, FreeList);
         ListRemove(next, true, true);
@@ -226,7 +245,7 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
     
     //prev + current
     if(prev && block->prev->is_free){
-        total_size+=block->prev->size + METADATA_SIZE;
+        total_size+= block->prev->size + METADATA_SIZE;
         new_block = block->prev;
         //BlockMetadata* next = block->next;
         //linkBlocks(new_block, next, BlockList);
@@ -237,55 +256,66 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
     }
-    ListRemove(new_block, false, true);
+    
     new_block->size = total_size;
+    ListRemove(new_block, false, true);
     FreeListInsertBlock(new_block);
     return new_block;
 }
-BlockMetadata* initWilde(size_t size){
-    BlockMetadata* new_block = (BlockMetadata*) sbrk((intptr_t) (size - list.tail.prev->size));
+
+/// allocate more memory to wilderness if needed and is free
+BlockMetadata* initWilde(size_t data_size){
+    BlockMetadata* wilderness = list.tail.prev;
+    assert(wilderness->is_free);
+    assert(wilderness != &list.head);
+    
+    if (data_size < wilderness->size){
+        return wilderness;
+    }
+    BlockMetadata* new_block = (BlockMetadata*) sbrk((intptr_t) (data_size - wilderness->size));
     //cout <<"initWilde:: new size= "<< size - list.tail.prev->size << "    new_block= "<< new_block << endl;
     if(new_block == (void*)-1){
         return NULL;
     }
-    list.tail.prev->is_free = false;
-    list.tail.prev->size = size;
-    stats.allocated_bytes+= size;
+    wilderness->is_free = false;
+    wilderness->size = data_size;
     
-    return new_block;
+    stats.allocated_bytes+= data_size;
+    return wilderness;
 }
 
 /// ====================================================================================================== ///
 /// ========================================== Malloc Functions ========================================== ///
 /// ====================================================================================================== ///
-void* smalloc(size_t size){
-    if(size == 0 || MUL_SIZE(size) > MAX_SIZE){
+void* smalloc(size_t data_size){
+    if(data_size == 0 || MUL_SIZE(data_size) > MAX_SIZE){
         return NULL;
     }
-    size = MUL_SIZE(size);
+    data_size = MUL_SIZE(data_size);
     
-    if(size >= MMAP_THRESHOLD){
-        BlockMetadata* new_region = (BlockMetadata*) mmap(NULL, size + METADATA_SIZE, PROT_READ | PROT_WRITE, MAP_ANONYMOUS , -1, 0);
+    if(data_size >= MMAP_THRESHOLD){
+        BlockMetadata* new_region = (BlockMetadata*) mmap(NULL, data_size + METADATA_SIZE, PROT_READ | PROT_WRITE, MAP_ANONYMOUS , -1, 0);
         if(new_region == MAP_FAILED){
             return NULL;
         }
         
         new_region->is_free = false;
-        new_region->size = size;
+        new_region->size = data_size;
         BlockMetadata* next = mmap_list.head.next;
         linkBlocks(&(mmap_list.head), new_region, BlockList);
         linkBlocks(new_region, next, BlockList);
         //linkBlocks(new_region, new_region, FreeList);
         
         stats.allocated_blocks++;
-        stats.allocated_bytes+= size;
+        stats.allocated_bytes+= data_size;
         return (new_region + 1);
     }
-    BlockMetadata* new_block = findFreeBlock(size);
+    
+    BlockMetadata* new_block = findFreeBlock(data_size);
     if(new_block == NULL){
         
         if(false && list.head.next == &list.tail){ //Empty List
-            new_block = initBlock(size);
+            new_block = initBlock(data_size);
             if(new_block == NULL){
                 return NULL;
             }
@@ -295,21 +325,19 @@ void* smalloc(size_t size){
             
         }
         if (list.tail.prev->is_free){
-            if (initWilde(size) == NULL){
+            if (initWilde(data_size) == NULL){
                 return NULL;
             }
             new_block = list.tail.prev;
-            linkBlocks(new_block->prev_free, new_block->next_free, FreeList);
+            ListRemove(new_block, false, true);
         }
         else{ //Insert Last
-            new_block = initBlock(size);
+            new_block = initBlock(data_size);
             if(new_block == NULL){
                 return NULL;
             }
             linkBlocks((list.tail.prev), new_block, BlockList);
             linkBlocks(new_block, &list.tail, BlockList);
-            new_block->next_free = NULL;
-            new_block->prev_free = NULL;
         }
     }
     else{
@@ -317,13 +345,14 @@ void* smalloc(size_t size){
         //cout << "##########################################################" << endl;
         //cout << "smalloc:: using existing block " << new_block << endl;
         //printHeap();
+        splitBlock(new_block, data_size);
         new_block->is_free = false;
-        linkBlocks(new_block->prev_free, new_block->next_free, FreeList);
+        ListRemove(new_block, false, true);
         //printHeap();
         //cout << "##########################################################" << endl;
         stats.free_blocks--;
         stats.free_bytes-= new_block->size;
-        splitBlock(new_block, size);
+        
     }
     
     return (new_block + 1);
@@ -335,28 +364,32 @@ void* scalloc(size_t num, size_t size){
     if(res == NULL){
         return NULL;
     }
-    memset(res, 0, num * size);
+    BlockMetadata* meta_data = (BlockMetadata*)res -1;
+    memset(res, 0, meta_data->size);
     return res;
 }
 
 void FreeListInsertBlock(BlockMetadata* free_block){
-    BlockMetadata* iter = list.head.next_free;
+    assert(!free_block->is_free);
+    free_block->is_free = true;
     //cout << "============= FreeListInsertBlock =============" << endl;
     //cout << "free_block= " << free_block << endl;
+    
+    BlockMetadata* iter = list.head.next_free;
     int count = 0;
+    
     while(iter != &list.tail &&  iter->size < free_block->size){
         iter = iter->next_free;
         assert(count < 30);
         count++;
     }
     BlockMetadata* prev = iter->prev_free;
+    linkBlocks(free_block, iter, FreeList);
+    linkBlocks(prev, free_block, FreeList);
     
     //cout << "iter= " << iter << endl;
     //cout << "iter.prev= " << prev << endl;
     //cout << "============= FreeListInsertBlock END =============" << endl;
-    
-    linkBlocks(free_block, iter, FreeList);
-    linkBlocks(prev, free_block, FreeList);
     
 }
 
@@ -369,9 +402,9 @@ void sfree(void* p){
     if (block_meta_data->is_free){
         return;
     }
-    block_meta_data->is_free = true;
+    //block_meta_data->is_free = true;
     if (block_meta_data->size >= MMAP_THRESHOLD){
-        linkBlocks(block_meta_data->prev, block_meta_data->next, BlockList);
+        ListRemove(block_meta_data, true, false);
         munmap(block_meta_data, block_meta_data->size + METADATA_SIZE);
         
         stats.allocated_blocks--;
@@ -381,8 +414,8 @@ void sfree(void* p){
         FreeListInsertBlock(block_meta_data);
         stats.free_blocks++;
         stats.free_bytes+= block_meta_data->size;
-        printHeap();
-        cout << "sfree:: block_meta_data= "<< block_meta_data << endl;
+        //printHeap();
+        //cout << "sfree:: block_meta_data= "<< block_meta_data << endl;
         combine(block_meta_data);
     }
    
