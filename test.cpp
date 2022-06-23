@@ -160,15 +160,15 @@ public:
         
         ///Line 2
         cout <<left<<setfill(' ')<<string(width, ' ')<<setw(width)<< "size= " << iter->size ;
-        cout <<setfill(' ')<< " || "<<string(width, ' ');
+        cout <<right<<setfill(' ')<< " || "<<string(width, ' ');
         cout <<left<<setfill(' ')<<setw(width)<<"is_free= " << iter->is_free << std::endl;
         ///Line 3 - BlockList
-        cout <<setw(width)<< "prev= " << iter->prev ;
-        cout <<setw(width)<< " || ";
-        cout <<setw(width)<<"next= " << iter->next << std::endl;
+        cout <<left<<setfill(' ')<<setw(width)<< "prev= " << iter->prev ;
+        cout <<right<<setw(width)<< " || ";
+        cout <<left<<setfill(' ')<<setw(width)<<"next= " << iter->next << std::endl;
         ///Line 4 - FreeList
         cout <<string(width, ' ')<<left<<setw(width)<< "prev_free= " << iter->prev_free;
-        cout <<setw(width)<< " || ";
+        cout <<right<<setw(width)<< " || ";
         cout <<string(width, ' ')<<left<<setw(width)<<"next_free= " << iter->next_free << std::endl;
         ///Line 4 - End
         cout <<string(4*width + 32, '-')<< endl;
