@@ -407,10 +407,10 @@ public:
         
     }
     
-    BlockMetadata* get_block(int block_num){
+    BlockMetadata* get_block(int block_num, List& listp=list){
         int counter = 0;
-        for (BlockMetadata* iter = &list.head; iter != nullptr; iter = iter->next) {
-            if (counter == block_num && iter != &list.tail){
+        for (BlockMetadata* iter = &listp.head; iter != nullptr; iter = iter->next) {
+            if (counter == block_num && iter != &listp.tail){
                 return iter;
             }
             counter++;
@@ -438,6 +438,7 @@ public:
         bool print_stats = false;
         bool op_print_mmap = false;
         size_t block_num, size, num_elements;
+        List* curr_list = &list;
         
         while (operation != "exit"){
             
@@ -484,7 +485,7 @@ public:
                 size = stoi(str_size);
                 cout << size;
                 
-                BlockMetadata* block = get_block(block_num);
+                BlockMetadata* block = get_block(block_num, curr_list);
                 cout << "   address: " << block << endl;
                 
                 BlockMetadata* new_block = (BlockMetadata*)srealloc(block+1, size);
@@ -497,7 +498,7 @@ public:
                 block_num = stoi(str_block_num);
                 cout << block_num;
                 
-                BlockMetadata* block = get_block(block_num);
+                BlockMetadata* block = get_block(block_num, curr_list);
                 cout << "   address: " << block << endl;
     
                 sfree(block+1);
@@ -514,8 +515,20 @@ public:
                     print_stats = false;
                     op_print_mmap = false;
                 }
+                
+            }
+            else if(operation == "list"){
+                //cout << "preset:    ";
+                cin >> str_print_options;
+                //cout << str_print_options << endl;
+    
+                if (str_print_options == "heap"){
+                    op_print_mmap = false;
+                    curr_list = &list;
+                }
                 if (str_print_options == "mmap"){
                     op_print_mmap = true;
+                    curr_list = &mmap_list;
                 }
             }
             else if(operation == "preset"){
@@ -529,12 +542,14 @@ public:
             }
             
             
-            printList();
+            
             if (print_stats){
                 validStats(true);
             }
             if (op_print_mmap){
                 print_mmap();
+            }else{
+                printList();
             }
             
         }/// end while
