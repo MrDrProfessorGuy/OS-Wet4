@@ -68,7 +68,7 @@ public:
         bool allBytes = allocated_bytes == _num_allocated_bytes();
         bool freeBlocks = free_blocks == _num_free_blocks();
         bool freeBytes = free_bytes == _num_free_bytes();
-        bool metaBytes = num_meta_bytes == _size_meta_data();
+        bool metaBytes = num_meta_bytes == _num_meta_data_bytes();
         
         if (!allBlocks || !allBytes || !freeBlocks || !freeBytes || !metaBytes){
             cout << "======================= ERROR:: Invalid Stats =======================" << endl;
