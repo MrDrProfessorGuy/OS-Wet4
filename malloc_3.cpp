@@ -562,27 +562,30 @@ void* srealloc(void* oldp, size_t size){
         
         
     }
-    else if(merge_all){/// e + f.1
+    else if(merge_all){/// e
         cout << string(8, '~') <<" Realloc::E+F.1 " << endl;
         //stats.free_blocks -= 2;
         //stats.free_bytes -= block->prev->size + block->next->size;
         //block->is_free = true;
         block = combine(block, true, true, false);
         //block->is_free = false;
-        splitBlock(block, MUL_SIZE(size), false);
+        //splitBlock(block, MUL_SIZE(size), false);
         
         /// unmap tmp
         memmove(block+1, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
     }
-    else if(IS_WILDERNESS(block->next)){/// f.2
+    else if(IS_WILDERNESS(block->next)){/// f.1 + f.2
         cout << string(8, '~') <<" Realloc::F.2 " << endl;
-        if (IS_FREE(block->prev) && IS_FREE(block->next)){
+        if (IS_FREE(block->prev) && IS_FREE(block->next)){ /// f.1
             //stats.free_blocks -= 2;
             //stats.free_bytes -= block->prev->size + block->next->size;
             //block->is_free = true;
             block = combine(block, true, true, false);
             //block->is_free = false;
+        }
+        else if (IS_FREE(block->next)){ /// f.2
+            block = combine(block, false, true, false);
         }
         initWilde(MUL_SIZE(size), false);
         /// unmap tmp
