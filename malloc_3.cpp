@@ -499,12 +499,14 @@ void* srealloc(void* oldp, size_t size){
     
     if (MUL_SIZE(size) >= MMAP_THRESHOLD){
         cout<< string(8, ' ') << "MUL_SIZE(size) >= MMAP_THRESHOLD " << endl;
-        sfree(oldp);
-        oldp = smalloc(MUL_SIZE(size));
         
-        memmove(block+1, tmp_data, MUL_SIZE(size));
+         block = (BlockMetadata*) smalloc(MUL_SIZE(size));
+        
+        memmove(block, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
-        return block+1;
+        
+        sfree(oldp);
+        return block;
     }
     if (block->size >= MUL_SIZE(size)){ /// a
         cout<< string(8, ' ') << "block->size >= MUL_SIZE(size) " << endl;
