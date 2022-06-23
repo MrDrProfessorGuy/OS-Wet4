@@ -499,6 +499,8 @@ void* srealloc(void* oldp, size_t size){
     }
     else if(IS_WILDERNESS(block)){/// c
         cout << string(8, '~') <<" Realloc::C " << endl;
+        stats.free_blocks++;
+        stats.free_bytes += block->size;
         if (IS_FREE(block->prev)){ /// b_note
             cout << string(8, '~') <<" Realloc::C::Note " << endl;
             //block->is_free = true;
@@ -509,8 +511,7 @@ void* srealloc(void* oldp, size_t size){
             stats.free_bytes -= block->prev->size + METADATA_SIZE;
             
         }
-        stats.free_blocks++;
-        stats.free_bytes += block->size;
+        
         FreeListInsertBlock(block);
         initWilde(MUL_SIZE(size));
         /// unmap tmp
