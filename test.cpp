@@ -465,7 +465,7 @@ public:
             else if(operation == "print"){
                 cout << "print:    options: ";
                 cin >> str_print_options;
-                cout << str_print_options;
+                cout << str_print_options << endl;
     
                 if (str_print_options == "stats"){
                     print_stats = true;
@@ -478,7 +478,7 @@ public:
             
             printList();
             if (print_stats){
-                validStats();
+                validStats(true);
             }
             
         }/// end while
