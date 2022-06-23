@@ -52,7 +52,7 @@ public:
         cout <<left<<setfill(' ')<<setw(line_width)<<str2 << data2 << std::endl;
     }
     void print_stats(){
-        int line_width = 10
+        int line_width = 10;
         cout << "======================= print_stats =======================" << std::endl;
         std::cout << "num_allocated_blocks =    Expected: " << allocated_blocks <<setw(line_width)<< "Got: "<< _num_allocated_blocks()  << std::endl;
         std::cout << "num_allocated_bytes =     Expected: " << allocated_bytes <<setw(line_width)<< "        Got: "<< _num_allocated_bytes() << std::endl;
