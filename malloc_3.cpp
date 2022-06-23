@@ -521,16 +521,19 @@ void* srealloc(void* oldp, size_t size){
     }
     else if(merge_next){/// d
         cout << string(8, '~') <<" Realloc::D " << endl;
-        stats.free_blocks--;
-        stats.free_bytes -= block->prev->size;
-        block->is_free = true;
     
-        combine(block, false, true);
-        block->is_free = false;
+        stats.free_bytes -= block->next->size + METADATA_SIZE;
+        //block->is_free = true;
+        FreeListInsertBlock(block);
+        block = combine(block, false, true);
+        ListRemove(block, false, true);
+        //block->is_free = false;
         splitBlock(block, MUL_SIZE(size));
         /// unmap tmp
         memmove(block+1, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
+        
+        
     }
     else if(merge_all){/// e + f.1
         cout << string(8, '~') <<" Realloc::E+F.1 " << endl;

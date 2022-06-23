@@ -415,6 +415,14 @@ public:
         return NULL;
     }
     
+    void presetA(){
+        smalloc(40);
+        smalloc(70);
+        smalloc(120);
+        smalloc(400);
+        smalloc(30);
+    }
+    
     void dynamic_test(){
         vector<void*> blocks;
         
@@ -500,6 +508,15 @@ public:
                 }
                 if (str_print_options == "no"){
                     print_stats = false;
+                }
+            }
+            else if(operation == "preset"){
+                //cout << "preset:    ";
+                cin >> str_print_options;
+                //cout << str_print_options << endl;
+    
+                if (str_print_options == "a"){
+                    presetA();
                 }
             }
             
