@@ -154,16 +154,16 @@ public:
     }
     
     void validateHeap(){
-        cout <<setfill('=')<<setw(10)<< " Validate Heap " <<setw(10)<< std::endl;
+        cout <<setfill('_')<<setw(10)<< " Validate Heap " <<setw(10)<< endl;
         int width = 10;
         int counter = 0;
         
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
-            std::cout <<setfill('-')<<setw(2*width)<< " BlockMetaData["<< counter <<"] "<< iter << setw(2*width) << std::endl;
-            std::cout <<setw(width)<< "size= " << iter->size <<setw(width)<< " || "<<setw(width)<<"is_free= " << iter->is_free << std::endl;
-            std::cout <<setw(width)<< "prev= " << iter->prev << " || "<<setw(width)<<"next= " << iter->next << std::endl;
-            std::cout <<setw(width)<< "prev_free= " << iter->prev_free <<setw(width)<< " || "<<setw(width)<<"next_free= " << iter->next_free << std::endl;
-            std::cout <<setfill('-')<<setw(4*width + 12) << endl;
+            cout <<setfill('-')<<setw(2*width)<< " BlockMetaData["<< counter <<"] "<< iter << setw(2*width) << std::endl;
+            cout <<setw(width)<< "size= " << iter->size <<setw(width)<< " || "<<setw(width)<<"is_free= " << iter->is_free << std::endl;
+            cout <<setw(width)<< "prev= " << iter->prev << " || "<<setw(width)<<"next= " << iter->next << std::endl;
+            cout <<setw(width)<< "prev_free= " << iter->prev_free <<setw(width)<< " || "<<setw(width)<<"next_free= " << iter->next_free << std::endl;
+            cout <<setfill('-')<<setw(4*width + 12) << endl;
             counter++;
         }
         std::cout <<setfill('=')<<setw(10)<< " Validation Ended " <<setw(10)<< std::endl;
