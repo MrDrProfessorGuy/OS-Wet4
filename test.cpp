@@ -156,8 +156,8 @@ public:
     void printBlock(BlockMetadata* iter, int counter){
         int width = 10;
         ///Line 1 - Title
-        cout <<setfill('-')<<setw(2*width)<< " BlockMetaData["<< counter <<"] "<< iter;
-        cout <<setfill('-')<<setw(2*width) << std::endl;
+        cout <<2*width*'='<< " BlockMetaData["<< counter <<"] "<< iter;
+        cout <<4*width*'='<< std::endl;
         ///Line 2
         cout <<setw(width)<< "size= " << iter->size ;
         cout <<setw(width)<< " || ";
@@ -173,15 +173,16 @@ public:
     }
     
     void validateHeap(){
-        cout <<setfill('_')<<setw(10)<< " Validate Heap " <<setw(10)<< endl;
         int width = 10;
         int counter = 0;
+    
+        cout <<4*width*'='<< " Validate Heap " << 4*width*'=' << endl;
         
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             printBlock(iter, counter);
             counter++;
         }
-        std::cout <<setfill('=')<<setw(10)<< " Validation Ended " <<setw(10)<< std::endl;
+        cout << 4*width*'=' << " Validation Ended " << 4*width*'=' << endl;
     }
     
     

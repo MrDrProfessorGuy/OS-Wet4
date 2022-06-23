@@ -293,6 +293,7 @@ BlockMetadata* initWilde(size_t data_size){
     wilderness->size = data_size;
     
     stats.allocated_bytes+= data_size;
+    stats.free_bytes += data_size - wilderness->size;
     return wilderness;
 }
 
@@ -342,6 +343,8 @@ void* smalloc(size_t data_size){
             }
             new_block = list.tail.prev;
             ListRemove(new_block, false, true);
+            stats.free_blocks--;
+            stats.free_bytes-= new_block->size;
         }
         else{ //Insert Last
             new_block = initBlock(data_size);
