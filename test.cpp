@@ -62,7 +62,7 @@ public:
         cout << "======================= End =======================" << std::endl;
         
     }
-    bool validStats(){
+    bool validStats(bool print=false){
         update_stats();
         bool allBlocks = allocated_blocks == _num_allocated_blocks();
         bool allBytes = allocated_bytes == _num_allocated_bytes();
@@ -70,9 +70,9 @@ public:
         bool freeBytes = free_bytes == _num_free_bytes();
         bool metaBytes = num_meta_bytes == _num_meta_data_bytes();
         
-        if (!allBlocks || !allBytes || !freeBlocks || !freeBytes || !metaBytes){
+        if (print || !allBlocks || !allBytes || !freeBlocks || !freeBytes || !metaBytes){
             cout << "======================= ERROR:: Invalid Stats =======================" << endl;
-            printHeap();
+            //printHeap();
             print_stats();
             return false;
         }
