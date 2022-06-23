@@ -559,11 +559,11 @@ void* srealloc(void* oldp, size_t size){
         memmove(block+1, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
         sfree(oldp);
-        oldp = smalloc(MUL_SIZE(size));
+        block = (BlockMetadata*)smalloc(MUL_SIZE(size));
     }
     
     cout << string(30, '=') <<" Realloc End "<< string(30, '=') << endl;
-    return oldp;
+    return block+1;
 }
 
 /// ====================================================================================================== ///
