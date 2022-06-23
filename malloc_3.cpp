@@ -193,7 +193,7 @@ BlockMetadata* initBlock(size_t size){
 }
 
 bool largeEnough(size_t size){
-    if (size < (METADATA_SIZE + 128)){
+    if (size <= (METADATA_SIZE + 128)){
         return false;
     }
     return true;
