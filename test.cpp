@@ -155,20 +155,21 @@ public:
     
     void printBlock(BlockMetadata* iter, int counter){
         int width = 14;
+        int h = 8;
         ///Line 1 - Title
         cout <<string(2*width, '=')<< " BlockMetaData["<< counter <<"] "<< iter << string(2*width, '=')<<endl;
         
         ///Line 2
-        cout <<left<<setfill(' ')<<string(width, ' ')<<setw(width)<< "size= " << iter->size ;
-        cout <<right<<string(width, ' ')<< " || "<<string(width, ' ');
+        cout <<left<<setfill(' ')<<string(h, ' ')<<setw(width)<< "size= " << iter->size ;
+        cout <<right<<string(h, ' ')<< " || "<<string(h, ' ');
         cout <<left<<setfill(' ')<<setw(width)<<"is_free= " << iter->is_free << std::endl;
         ///Line 3 - BlockList
-        cout <<left<<setfill(' ')<<string(width, ' ')<<setw(width)<< "prev= " << iter->prev ;
-        cout <<right<<string(width, ' ')<< " || "<<string(width, ' ');
+        cout <<left<<setfill(' ')<<string(h, ' ')<<setw(width)<< "prev= " << iter->prev ;
+        cout <<right<<string(h, ' ')<< " || "<<string(h, ' ');
         cout <<left<<setfill(' ')<<setw(width)<<"next= " << iter->next << std::endl;
         ///Line 4 - FreeList
-        cout <<string(width, ' ')<<left<<setw(width)<< "prev_free= " << iter->prev_free;
-        cout <<right<<string(width, ' ')<< " || "<<string(width, ' ');
+        cout <<string(h, ' ')<<left<<setw(width)<< "prev_free= " << iter->prev_free;
+        cout <<right<<string(h, ' ')<< " || "<<string(h, ' ');
         cout <<left<<setw(width)<<"next_free= " << iter->next_free << std::endl;
         ///Line 4 - End
         cout <<string(4*width + 32, '-')<< endl;
