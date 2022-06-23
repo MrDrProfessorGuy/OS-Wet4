@@ -299,9 +299,9 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true, boo
 }
 
 /// allocate more memory to wilderness if needed and is free
-BlockMetadata* initWilde(size_t data_size){
+BlockMetadata* initWilde(size_t data_size, bool blockIsFree=true){
     BlockMetadata* wilderness = list.tail.prev;
-    assert(wilderness->is_free);
+    //assert(wilderness->is_free);
     assert(wilderness != &list.head);
     
     if (data_size <= wilderness->size){
@@ -319,8 +319,11 @@ BlockMetadata* initWilde(size_t data_size){
     wilderness->is_free = false;
     
     stats.allocated_bytes+= (data_size - wilderness->size);
-    stats.free_blocks--;
-    stats.free_bytes -= wilderness->size;
+    if (blockIsFree){
+        stats.free_blocks--;
+        stats.free_bytes -= wilderness->size;
+    }
+    
     
     wilderness->size = data_size;
     
