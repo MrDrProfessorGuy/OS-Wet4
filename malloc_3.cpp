@@ -504,7 +504,7 @@ void* srealloc(void* oldp, size_t size){
         
         if (IS_FREE(block->prev)){ /// b_note
             cout << string(8, '~') <<" Realloc::C::Note " << endl;
-            stats.free_bytes -= block->prev->size;// + METADATA_SIZE;
+            //stats.free_bytes -= block->prev->size + METADATA_SIZE;
             //block->is_free = true;
             FreeListInsertBlock(block);
             block = combine(block, true, false);
