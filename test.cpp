@@ -244,13 +244,13 @@ public:
         clear_stats();
         
     
-        cout <<4*width*'='<< " Validate Heap " << 4*width*'=' << endl;
+        cout <<string(2*width, '=')<< " Validate Heap " <<string(2*width, '=')<< endl;
         
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
             printBlock(iter, counter);
             counter++;
         }
-        cout << 4*width*'=' << " Validation Ended " << 4*width*'=' << endl;
+        cout <<string(2*width, '=')<< " Validation Ended " << string(2*width, '=')<< endl;
     }
     
     
@@ -321,7 +321,7 @@ public:
                     iter++;
                 }
                 cout << "free address=" << BLOCK_STRT_ADDR(*iter) << endl;
-                validateHeap();
+                //validateHeap();
                 sfree(*iter);
                 //assert(validSize(((BlockMetadata*)(*iter))-1));
                 blocks.erase(iter);
