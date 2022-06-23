@@ -315,7 +315,7 @@ public:
             assert(validStats());
             
             int op = rand()%OPs_NUM;
-            int size = rand()%(MMAP_THRESHOLD/12);
+            int size = rand()%(MMAP_THRESHOLD/1);
             cout << "test_2[" << a <<"]::";
             if (op == Malloc){
                 cout << "malloc " << size;
