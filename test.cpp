@@ -305,7 +305,7 @@ public:
                 cout.flush();
                 void* block = scalloc(items, size);
                 if (block == nullptr){
-                    cout << "   address= "<< BLOCK_STRT_ADDR(block) << endl;
+                    cout << " ERROR  address= "<< BLOCK_STRT_ADDR(block) << endl;
                     continue;
                 }
                 blocks.push_back(block);
