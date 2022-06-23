@@ -290,10 +290,10 @@ BlockMetadata* initWilde(size_t data_size){
         return NULL;
     }
     //wilderness->is_free = false;
+    
+    stats.allocated_bytes+= data_size - wilderness->size;
     wilderness->size = data_size;
     
-    stats.allocated_bytes+= data_size;
-    stats.free_bytes += data_size - wilderness->size;
     return wilderness;
 }
 

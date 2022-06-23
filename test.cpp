@@ -15,7 +15,68 @@ public:
     size_t free_blocks;
     size_t free_bytes;
     size_t meta_data_size;
-    size_t num_beta_bytes;
+    size_t num_meta_bytes;
+    
+    void clear_stats(){
+        allocated_blocks = 0;
+        allocated_bytes = 0;
+        free_blocks = 0;
+        free_bytes = 0;
+        num_meta_bytes = 0;
+        meta_data_size = _size_meta_data();
+    }
+    
+    
+    void update_stats(){
+        clear_stats();
+        
+        for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
+            if (iter != &list.head && iter != &list.tail){
+                allocated_blocks++;
+                allocated_bytes += iter->size;
+                num_meta_bytes = allocated_blocks*meta_data_size;
+                if (iter->is_free){
+                    free_blocks++;
+                    free_bytes += iter->size;
+                }
+            
+            }
+        }
+        
+    }
+    void printDataLine(int line_width, string str1, size_t data1, string str2, size_t data2){
+        int h = 8;
+        cout <<string(h, ' ');
+        cout <<left<<setfill(' ')<<setw(line_width)<< str1 << data1;
+        cout <<string(h, ' ')<< " || "<<string(h, ' ');
+        cout <<left<<setfill(' ')<<setw(line_width)<<str2 << data2 << std::endl;
+    }
+    void print_stats(){
+        cout << "======================= print_stats =======================" << std::endl;
+        std::cout << "num_allocated_blocks =    Expected: " << allocated_blocks << "        Got: "<< _num_allocated_blocks()  << std::endl;
+        std::cout << "num_allocated_bytes =     Expected: " << allocated_blocks << "        Got: "<< _num_allocated_bytes() << std::endl;
+        std::cout << "num_free_blocks:          Expected: " << allocated_blocks << "        Got: "<< _num_free_blocks() << std::endl;
+        std::cout << "num_free_bytes =          Expected: " << allocated_blocks << "        Got: "<< _num_free_bytes() << std::endl;
+        std::cout << "num_beta_bytes =          Expected: " << allocated_blocks << "        Got: "<< _num_meta_data_bytes() << std::endl;
+        std::cout << "size_meta_data =          Expected: " << allocated_blocks << "        Got: "<< _size_meta_data() << std::endl;
+        cout << "======================= End =======================" << std::endl;
+        
+    }
+    bool validStats(){
+        update_stats();
+        bool allBlocks = allocated_blocks == _num_allocated_blocks();
+        bool allBytes = allocated_bytes == _num_allocated_bytes();
+        bool freeBlocks = free_blocks == _num_free_blocks();
+        bool freeBytes = free_bytes == _num_free_bytes();
+        bool metaBytes = num_meta_bytes == _size_meta_data();
+        
+        if (!allBlocks || !allBytes || !freeBlocks || !freeBytes || !metaBytes){
+            cout << "======================= ERROR:: Invalid Stats =======================" << endl;
+            print_stats();
+            return false;
+        }
+        return true;
+    }
     
     void print(){
         std::cout << "======================= Print =======================" << std::endl;
@@ -157,7 +218,7 @@ public:
         int width = 14;
         int h = 4;
         ///Line 1 - Title
-        cout <<string(2*width, '=')<< " BlockMetaData["<< counter <<"] "<< iter << string(2*width, '=')<<endl;
+        cout <<string(2*width, '=')<< "BlockMetaData["<< counter <<"] "<< iter << string(2*width, '=')<<endl;
         
         ///Line 2
         cout <<left<<setfill(' ')<<string(h, ' ')<<setw(width)<< "size= " <<left<< iter->size ;
@@ -175,9 +236,13 @@ public:
         cout <<string(4*width + 32, '-')<< endl;
     }
     
+    
     void validateHeap(){
         int width = 10;
         int counter = 0;
+        
+        clear_stats();
+        
     
         cout <<4*width*'='<< " Validate Heap " << 4*width*'=' << endl;
         
@@ -211,10 +276,13 @@ public:
         vector<void*> blocks;
         int test_num = 100;
         //srand(872);
-        srand(3);
+        srand(32);
         enum OP {Malloc, Calloc, Free, Realloc, OPs_NUM};
         
+        
         for (int a = 0; a < test_num; a++){
+            assert(validStats());
+            
             int op = rand()%OPs_NUM;
             int size = rand()%(MMAP_THRESHOLD/12);
             cout << "test_2[" << a <<"]::";
