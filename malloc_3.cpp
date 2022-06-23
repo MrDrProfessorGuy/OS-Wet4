@@ -292,7 +292,7 @@ BlockMetadata* initWilde(size_t data_size){
         return NULL;
     }
     
-    ListRemove(new_block, false, true);
+    ListRemove(wilderness, false, true);
     wilderness->is_free = false;
     
     stats.allocated_bytes+= data_size;
