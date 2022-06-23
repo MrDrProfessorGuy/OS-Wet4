@@ -395,7 +395,7 @@ public:
         string str_size = "";
         string str_num_elements = "";
         
-        int block_num, size, num_elements;
+        size_t block_num, size, num_elements;
         
         while (operation != "exit"){
             
