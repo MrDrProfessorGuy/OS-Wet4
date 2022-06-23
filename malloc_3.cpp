@@ -223,7 +223,7 @@ void splitBlock(BlockMetadata* block, size_t first_blk_size, bool update_stats=t
         linkBlocks(block, new_block, BlockList);
         linkBlocks(new_block, block_next, BlockList);
     
-        new_block->is_free = true; /// so assertion in FreeListInsertBlock isn't triggered
+        new_block->is_free = false; /// so assertion in FreeListInsertBlock isn't triggered
         FreeListInsertBlock(new_block);
     
     

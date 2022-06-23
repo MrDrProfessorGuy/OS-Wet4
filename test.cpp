@@ -435,7 +435,7 @@ public:
         string str_num_elements = "";
         string str_print_options = "";
         
-        bool print_stats = false;
+        bool print_stats = true;
         size_t block_num, size, num_elements;
         
         while (operation != "exit"){
