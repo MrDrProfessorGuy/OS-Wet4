@@ -597,6 +597,9 @@ void* srealloc(void* oldp, size_t size){
         
         block = (BlockMetadata*)smalloc(MUL_SIZE(size));
         sfree(oldp);
+        if (block == NULL){
+            return NULL;
+        }
         memmove(block, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
     }
