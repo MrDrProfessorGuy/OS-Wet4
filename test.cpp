@@ -166,7 +166,7 @@ public:
             cout <<setfill('-')<<setw(4*width + 12) << endl;
             counter++;
         }
-        std::cout <<setfill('=')<<setw(10)<< " Validation Ended " <<setw(10)<< std::endl;
+        std::cout <<setw(10)<< " Validation Ended " <<setw(10)<<setfill('=')<< std::endl;
     }
     
     
