@@ -338,13 +338,14 @@ void* smalloc(size_t data_size){
             
         }
         if (list.tail.prev->is_free){
+            int size_prev = list.tail.prev->size;
             if (initWilde(data_size) == NULL){
                 return NULL;
             }
             new_block = list.tail.prev;
             ListRemove(new_block, false, true);
             stats.free_blocks--;
-            stats.free_bytes-= new_block->size;
+            stats.free_bytes-= size_prev;
         }
         else{ //Insert Last
             new_block = initBlock(data_size);
