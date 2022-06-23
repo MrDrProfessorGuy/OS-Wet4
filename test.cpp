@@ -274,8 +274,10 @@ public:
     void test1(){
         print();
         printHeap();
-        void* a = smalloc(MMAP_THRESHOLD);
-        MemView();
+        void* a = smalloc(1);
+        printHeap();
+        sfree(a);
+        printHeap();
         void* b = smalloc(200);
         MemView();
         sfree(b);
@@ -283,8 +285,7 @@ public:
         
         void* c = smalloc(400);
         MemView();
-        sfree(a);
-        MemView();
+       
         sfree(c);
         MemView();
     }
@@ -461,6 +462,7 @@ public:
 int main(int argc,char* argv[]) {
     test a;
     
+    a.test1();
     a.dynamic_test();
     
     int seed = 1;
