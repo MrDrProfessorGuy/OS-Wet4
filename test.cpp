@@ -52,14 +52,13 @@ public:
         cout <<left<<setfill(' ')<<setw(line_width)<<str2 << data2 << std::endl;
     }
     void print_stats(){
-        int line_width = 10;
         cout << "======================= print_stats =======================" << std::endl;
-        std::cout << "num_allocated_blocks =    Expected: " << allocated_blocks <<setw(line_width)<< "Got: "<< _num_allocated_blocks()  << std::endl;
-        std::cout << "num_allocated_bytes =     Expected: " << allocated_bytes <<setw(line_width)<< "        Got: "<< _num_allocated_bytes() << std::endl;
-        std::cout << "num_free_blocks:          Expected: " << free_blocks <<setw(line_width)<< "        Got: "<< _num_free_blocks() << std::endl;
-        std::cout << "num_free_bytes =          Expected: " << free_bytes <<setw(line_width)<< "        Got: "<< _num_free_bytes() << std::endl;
-        std::cout << "num_meta_bytes =          Expected: " << num_meta_bytes <<setw(line_width)<< "        Got: "<< _num_meta_data_bytes() << std::endl;
-        std::cout << "size_meta_data =          Expected: " << meta_data_size <<setw(line_width)<< "        Got: "<< _size_meta_data() << std::endl;
+        std::cout << "num_allocated_blocks =    Expected: " << allocated_blocks << "        Got: "<< _num_allocated_blocks()  << std::endl;
+        std::cout << "num_allocated_bytes =     Expected: " << allocated_bytes << "        Got: "<< _num_allocated_bytes() << std::endl;
+        std::cout << "num_free_blocks:          Expected: " << free_blocks << "        Got: "<< _num_free_blocks() << std::endl;
+        std::cout << "num_free_bytes =          Expected: " << free_bytes << "        Got: "<< _num_free_bytes() << std::endl;
+        std::cout << "num_meta_bytes =          Expected: " << num_meta_bytes << "        Got: "<< _num_meta_data_bytes() << std::endl;
+        std::cout << "size_meta_data =          Expected: " << meta_data_size << "        Got: "<< _size_meta_data() << std::endl;
         cout << "======================= End =======================" << std::endl;
         
     }

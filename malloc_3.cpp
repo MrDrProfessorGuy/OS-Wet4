@@ -226,6 +226,8 @@ void splitBlock(BlockMetadata* block, size_t first_blk_size){
         
         stats.allocated_blocks++;
         stats.allocated_bytes -= METADATA_SIZE;
+        stats.free_blocks++;
+        stats.free_bytes -= METADATA_SIZE;
     }
 }
 
@@ -346,7 +348,7 @@ void* smalloc(size_t data_size){
             if (initWilde(data_size) == NULL){
                 return NULL;
             }
-            //new_block = list.tail.prev;
+            new_block = list.tail.prev;
             //ListRemove(new_block, false, true);
             
             //stats.free_blocks--;
