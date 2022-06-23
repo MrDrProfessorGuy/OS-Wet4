@@ -300,7 +300,7 @@ public:
                 assert(validSize(((BlockMetadata*)block)-1));
             }
             else if (op == Calloc){
-                size_t items = rand()%10;
+                size_t items = 1 + rand()%10;
                 cout << "calloc, items= "<< items <<",    size= "<<size;
                 cout.flush();
                 void* block = scalloc(items, size);
