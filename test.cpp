@@ -88,7 +88,7 @@ public:
         colorIt(cout, metaBytes) << "num_meta_bytes =          Expected: " << num_meta_bytes << "        Got: "<< _num_meta_data_bytes() <<RST<< std::endl;
         //colorIt(cout, true) << "size_meta_data =          Expected: " << meta_data_size << "        Got: "<< _size_meta_data() <<RST<< std::endl;
         if (!freeBytes){
-            cout << "-num_free_bytes" << -_num_free_bytes() << endl;
+            cout << "-(num_free_bytes): " << -_num_free_bytes() << endl;
         }
         cout << "======================= End =======================" << std::endl;
         

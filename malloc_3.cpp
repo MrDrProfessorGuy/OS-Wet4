@@ -205,7 +205,7 @@ bool largeEnough(size_t size){
  * Get an address to start of MetaData of a free block and required data size,
  * split if largeEnough
  */
-void splitBlock(BlockMetadata* block, size_t first_blk_size, bool update_stats=true){
+void splitBlock(BlockMetadata* block, size_t first_blk_size, bool blockIsFree=true){
     //assert(block->is_free);
     size_t new_size = (block->size) - (first_blk_size + METADATA_SIZE);
     
@@ -230,7 +230,13 @@ void splitBlock(BlockMetadata* block, size_t first_blk_size, bool update_stats=t
         stats.allocated_blocks++;
         stats.allocated_bytes -= METADATA_SIZE;
         stats.free_blocks++;
-        stats.free_bytes -= METADATA_SIZE;
+        if (blockIsFree){
+            stats.free_bytes -= METADATA_SIZE;
+        }
+        else{
+            stats.free_bytes += new_size;
+        }
+        
         
         
     }
@@ -239,7 +245,7 @@ void splitBlock(BlockMetadata* block, size_t first_blk_size, bool update_stats=t
 /*
  * Get an address to start of MetaData of a free block and combine with neighbours if possible
  */
-BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
+BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true, bool blockIsFree=true){
     assert(block->is_free);
     size_t total_size = block->size;
     BlockMetadata* new_block = block;
@@ -255,7 +261,12 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
         stats.free_blocks--;
-        stats.free_bytes += METADATA_SIZE;
+        if (blockIsFree){
+            stats.free_bytes += METADATA_SIZE;
+        }
+        else{
+            stats.free_bytes -= next->size;
+        }
     }
     
     //prev + current
@@ -271,7 +282,14 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
         stats.free_blocks--;
-        stats.free_bytes += METADATA_SIZE;
+        if (blockIsFree){
+            stats.free_bytes += METADATA_SIZE;
+        }
+        else{
+            stats.free_bytes -= new_block->size;
+        }
+        
+        
     }
     
     new_block->size = total_size;
@@ -470,7 +488,7 @@ void* srealloc(void* oldp, size_t size){
     if (block->size >= MUL_SIZE(size)){ /// a
         cout<< string(8, ' ') << "block->size >= MUL_SIZE(size) " << endl;
         //FreeListInsertBlock(block);
-        splitBlock(block, MUL_SIZE(size));
+        splitBlock(block, MUL_SIZE(size), false);
         return block+1;
     }
     
@@ -490,10 +508,10 @@ void* srealloc(void* oldp, size_t size){
     if(merge_prev){/// b
         cout << string(8, '~') <<" Realloc::B " << endl;
         
-        stats.free_bytes -= block->prev->size + METADATA_SIZE;
+        //stats.free_bytes -= block->prev->size + METADATA_SIZE;
         //block->is_free = true;
         FreeListInsertBlock(block);
-        block = combine(block, true, false);
+        block = combine(block, true, false, false);
         ListRemove(block, false, true);
         //block->is_free = false;
         splitBlock(block, MUL_SIZE(size), false);
@@ -503,15 +521,15 @@ void* srealloc(void* oldp, size_t size){
     }
     else if(IS_WILDERNESS(block)){/// c
         cout << string(8, '~') <<" Realloc::C " << endl;
-        stats.free_blocks++;
-        stats.free_bytes += block->size;
+        //stats.free_blocks++;
+        //stats.free_bytes += block->size;
         
         if (IS_FREE(block->prev)){ /// b_note
             cout << string(8, '~') <<" Realloc::C::Note " << endl;
             //stats.free_bytes -= block->prev->size + METADATA_SIZE;
             //block->is_free = true;
             FreeListInsertBlock(block);
-            block = combine(block, true, false);
+            block = combine(block, true, false, false);
             ListRemove(block, false, true);
             //stats.free_blocks--;
             
