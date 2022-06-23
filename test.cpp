@@ -434,11 +434,24 @@ public:
                 blocks.push_back(data);
             }
             else if(operation == "realloc"){
-            
+                cout << "realloc:    block_num: ";
+                cin >> str_block_num;
+                block_num = stoi(str_block_num);
+                cout << block_num << "      size: ";
+                cin >> str_size;
+                size = stoi(str_size);
+                cout << size;
+                
+                BlockMetadata* block = get_block(block_num);
+                //cout << "   address: " << block << endl;
+                
+                BlockMetadata* new_block = (BlockMetadata*)srealloc(block, size);
+                cout << "   block["<<block_num<<"]: " << block << "   Relocated to" << new_block << endl;
+    
             }
             else if(operation == "free"){
-                cin >> str_block_num;
                 cout << "free:    block_num: ";
+                cin >> str_block_num;
                 block_num = stoi(str_block_num);
                 cout << block_num;
                 
