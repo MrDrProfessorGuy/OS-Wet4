@@ -135,6 +135,9 @@ public:
         if (iter == nullptr){
             return true;
         }
+        assert(validPointer(iter));
+        assert(validFreePointer(iter));
+        
         if (iter->next != &list.tail){
             char* next = (iter->size + METADATA_SIZE + (char*)iter);
             if ((iter->size + METADATA_SIZE + (char*)iter) != (char*)iter->next){
@@ -146,8 +149,6 @@ public:
                 }
                 return false;
             }
-            validFreePointer(iter);
-            validPointer(iter);
         }
         return true;
     }
