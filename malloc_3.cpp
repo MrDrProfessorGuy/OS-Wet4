@@ -512,7 +512,7 @@ void* srealloc(void* oldp, size_t size){
             //stats.free_blocks--;
             
         }
-        
+        cout << "-num_free_bytes" << -_num_free_bytes() << endl;
         FreeListInsertBlock(block);
         initWilde(MUL_SIZE(size));
         /// unmap tmp
