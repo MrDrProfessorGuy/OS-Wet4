@@ -319,9 +319,9 @@ public:
                 if (blocks.empty()){
                     continue;
                 }
-                int pos = rand()%(blocks.size()-1);
+                int pos = rand()%(blocks.size());
                 auto iter = blocks.begin();
-                for (int a = 0; a <= pos; a++){
+                for (int a = 0; a < pos; a++){
                     iter++;
                 }
                 cout << "free address=" << BLOCK_STRT_ADDR(*iter) << endl;
