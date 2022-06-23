@@ -289,9 +289,13 @@ BlockMetadata* initWilde(size_t data_size){
     if(new_block == (void*)-1){
         return NULL;
     }
-    //wilderness->is_free = false;
     
-    stats.allocated_bytes+= data_size - wilderness->size;
+    ListRemove(new_block, false, true);
+    wilderness->is_free = false;
+    
+    stats.allocated_bytes+= data_size;
+    stats.free_blocks--;
+    //stats.free_bytes += data_size;
     wilderness->size = data_size;
     
     return wilderness;
@@ -338,14 +342,15 @@ void* smalloc(size_t data_size){
             
         }
         if (list.tail.prev->is_free){
-            int size_prev = list.tail.prev->size;
+            //int size_prev = list.tail.prev->size;
             if (initWilde(data_size) == NULL){
                 return NULL;
             }
-            new_block = list.tail.prev;
-            ListRemove(new_block, false, true);
-            stats.free_blocks--;
-            stats.free_bytes-= size_prev;
+            //new_block = list.tail.prev;
+            //ListRemove(new_block, false, true);
+            
+            //stats.free_blocks--;
+            //stats.free_bytes-= new_block->size;
         }
         else{ //Insert Last
             new_block = initBlock(data_size);
