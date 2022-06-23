@@ -394,7 +394,9 @@ public:
         string str_block_num = "";
         string str_size = "";
         string str_num_elements = "";
+        string str_print_options = "";
         
+        bool print_stats = false;
         size_t block_num, size, num_elements;
         
         while (operation != "exit"){
@@ -460,9 +462,24 @@ public:
     
                 sfree(block+1);
             }
+            else if(operation == "print"){
+                cout << "print:    options: ";
+                cin >> str_print_options;
+                cout << str_print_options;
+    
+                if (str_print_options == "stats"){
+                    print_stats = true;
+                }
+                if (str_print_options == "no"){
+                    print_stats = false;
+                }
+            }
             
             
             printList();
+            if (print_stats){
+                validStats();
+            }
             
         }/// end while
         

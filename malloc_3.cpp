@@ -509,6 +509,9 @@ void* srealloc(void* oldp, size_t size){
             block->is_free = false;
             
         }
+        stats.free_blocks++;
+        stats.free_bytes += block->size;
+        FreeListInsertBlock(block);
         initWilde(MUL_SIZE(size));
         /// unmap tmp
         memmove(block+1, tmp_data, MUL_SIZE(size));
