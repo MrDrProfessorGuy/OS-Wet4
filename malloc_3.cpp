@@ -323,8 +323,8 @@ void* smalloc(size_t data_size){
         new_region->is_free = false;
         new_region->size = data_size;
         BlockMetadata* next = mmap_list.head.next;
-        ///linkBlocks(&(mmap_list.head), new_region, BlockList);
-        ///linkBlocks(new_region, next, BlockList);
+        linkBlocks(&(mmap_list.head), new_region, BlockList);
+        linkBlocks(new_region, next, BlockList);
         //linkBlocks(new_region, new_region, FreeList);
         
         stats.allocated_blocks++;
@@ -428,11 +428,10 @@ void sfree(void* p){
     }
     //block_meta_data->is_free = true;
     if (block_meta_data->size >= MMAP_THRESHOLD){
-        ///ListRemove(block_meta_data, true, false);
-        munmap(block_meta_data, block_meta_data->size + METADATA_SIZE);
-        
         stats.allocated_blocks--;
         stats.allocated_bytes-=block_meta_data->size;
+        ListRemove(block_meta_data, true, false);
+        munmap(block_meta_data, block_meta_data->size + METADATA_SIZE);
     }
     else{
         FreeListInsertBlock(block_meta_data);
