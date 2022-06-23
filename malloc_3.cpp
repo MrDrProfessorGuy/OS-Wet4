@@ -477,11 +477,7 @@ void* srealloc(void* oldp, size_t size){
     if (size <= 0){
         return NULL;
     }
-    if (MUL_SIZE(size) >= MMAP_THRESHOLD){
-        cout<< string(8, ' ') << "MUL_SIZE(size) >= MMAP_THRESHOLD " << endl;
-        sfree(oldp);
-        oldp = smalloc(MUL_SIZE(size));
-    }
+    
     if (oldp == NULL){
         cout<< string(8, ' ') << "oldp == NULL " << endl;
         void* res = smalloc(size);
@@ -491,7 +487,25 @@ void* srealloc(void* oldp, size_t size){
         
         return res;
     }
+    
+    
+    
     BlockMetadata* block = (BlockMetadata*)oldp - 1;
+    BlockMetadata* tmp_data = (BlockMetadata*) mmap(NULL, MUL_SIZE(size), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS , -1, 0);
+    if(tmp_data == MAP_FAILED){
+        return NULL;
+    }
+    memmove(tmp_data, block+1, block->size);
+    
+    if (MUL_SIZE(size) >= MMAP_THRESHOLD){
+        cout<< string(8, ' ') << "MUL_SIZE(size) >= MMAP_THRESHOLD " << endl;
+        sfree(oldp);
+        oldp = smalloc(MUL_SIZE(size));
+        
+        memmove(block+1, tmp_data, MUL_SIZE(size));
+        munmap(tmp_data, MUL_SIZE(size));
+        return block+1;
+    }
     if (block->size >= MUL_SIZE(size)){ /// a
         cout<< string(8, ' ') << "block->size >= MUL_SIZE(size) " << endl;
         //FreeListInsertBlock(block);
@@ -505,12 +519,7 @@ void* srealloc(void* oldp, size_t size){
     bool merge_all = (IS_FREE(block->prev)) && IS_FREE(block->next) && (block->prev->size + block->size +
                                                                         block->next->size + 2*METADATA_SIZE >= MUL_SIZE(size));
     
-    BlockMetadata* tmp_data = (BlockMetadata*) mmap(NULL, MUL_SIZE(size), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS , -1, 0);
-    if(tmp_data == MAP_FAILED){
-        return NULL;
-    }
     
-    memmove(tmp_data, block+1, block->size);
     
     if(merge_prev){/// b
         cout << string(8, '~') <<" Realloc::B " << endl;

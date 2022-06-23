@@ -301,6 +301,18 @@ public:
         cout <<string(2*width, '=')<< " Validation Ended " << string(2*width, '=')<< endl;
     }
     
+    void validCalloc(BlockMetadata* block){
+        size_t size = block->size;
+        char* data = (char*)((block+1));
+        for (char* iter = data; iter < (data+size); iter++) {
+            if (*iter != 0){
+                cout << "ERROR: calloc failed at block: " << block << "    iter: " << iter << endl;
+                assert(*iter == 0);
+            }
+        }
+        
+        
+    }
     
     void test1(){
         print();
@@ -468,11 +480,12 @@ public:
                 cout << size << "   address: ";
                 
                 
-                BlockMetadata* data = (BlockMetadata*)smalloc(size);
+                BlockMetadata* data = (BlockMetadata*)scalloc(num_elements, size);
                 if (data == nullptr){
                     cout << "NULL" << endl;
                     continue;
                 }
+                validCalloc(data);
                 cout << data-1 << endl;
                 blocks.push_back(data);
             }
