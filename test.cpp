@@ -290,8 +290,8 @@ public:
     void test_mmap(){
         void* a = smalloc(MMAP_THRESHOLD + 100);
         print_mmap();
-        printHeap();
-        return;
+        //printHeap();
+        //return;
         void* b = smalloc(MMAP_THRESHOLD);
         print_mmap();
     
