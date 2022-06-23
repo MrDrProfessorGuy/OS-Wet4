@@ -246,7 +246,7 @@ void splitBlock(BlockMetadata* block, size_t first_blk_size, bool blockIsFree=tr
  * Get an address to start of MetaData of a free block and combine with neighbours if possible
  */
 BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true, bool blockIsFree=true){
-    assert(block->is_free);
+    //assert(block->is_free);
     size_t total_size = block->size;
     BlockMetadata* new_block = block;
     
@@ -513,9 +513,9 @@ void* srealloc(void* oldp, size_t size){
         
         //stats.free_bytes -= block->prev->size + METADATA_SIZE;
         //block->is_free = true;
-        FreeListInsertBlock(block);
+        //FreeListInsertBlock(block);
         block = combine(block, true, false, false);
-        ListRemove(block, false, true);
+        //ListRemove(block, false, true);
         //block->is_free = false;
         splitBlock(block, MUL_SIZE(size), false);
         /// unmap tmp
@@ -531,14 +531,14 @@ void* srealloc(void* oldp, size_t size){
             cout << string(8, '~') <<" Realloc::C::Note " << endl;
             //stats.free_bytes -= block->prev->size + METADATA_SIZE;
             //block->is_free = true;
-            FreeListInsertBlock(block);
+            //FreeListInsertBlock(block);
             block = combine(block, true, false, false);
-            ListRemove(block, false, true);
+            //ListRemove(block, false, true);
             //stats.free_blocks--;
             
         }
         
-        FreeListInsertBlock(block);
+        //FreeListInsertBlock(block);
         initWilde(MUL_SIZE(size), false);
         /// unmap tmp
         memmove(block+1, tmp_data, MUL_SIZE(size));
@@ -547,13 +547,13 @@ void* srealloc(void* oldp, size_t size){
     else if(merge_next){/// d
         cout << string(8, '~') <<" Realloc::D " << endl;
     
-        stats.free_bytes -= block->next->size + METADATA_SIZE;
+        //stats.free_bytes -= block->next->size + METADATA_SIZE;
         //block->is_free = true;
-        FreeListInsertBlock(block);
-        block = combine(block, false, true);
-        ListRemove(block, false, true);
+        //FreeListInsertBlock(block);
+        block = combine(block, false, true, false);
+        //ListRemove(block, false, true);
         //block->is_free = false;
-        splitBlock(block, MUL_SIZE(size));
+        splitBlock(block, MUL_SIZE(size), false);
         /// unmap tmp
         memmove(block+1, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
@@ -562,12 +562,12 @@ void* srealloc(void* oldp, size_t size){
     }
     else if(merge_all){/// e + f.1
         cout << string(8, '~') <<" Realloc::E+F.1 " << endl;
-        stats.free_blocks -= 2;
-        stats.free_bytes -= block->prev->size + block->next->size;
-        block->is_free = true;
-        block = combine(block, true, true);
-        block->is_free = false;
-        splitBlock(block, MUL_SIZE(size));
+        //stats.free_blocks -= 2;
+        //stats.free_bytes -= block->prev->size + block->next->size;
+        //block->is_free = true;
+        block = combine(block, true, true, false);
+        //block->is_free = false;
+        splitBlock(block, MUL_SIZE(size), false);
         
         /// unmap tmp
         memmove(block+1, tmp_data, MUL_SIZE(size));
@@ -576,13 +576,13 @@ void* srealloc(void* oldp, size_t size){
     else if(IS_WILDERNESS(block->next)){/// f.2
         cout << string(8, '~') <<" Realloc::F.2 " << endl;
         if (IS_FREE(block->prev) && IS_FREE(block->next)){
-            stats.free_blocks -= 2;
-            stats.free_bytes -= block->prev->size + block->next->size;
-            block->is_free = true;
-            block = combine(block, true, true);
-            block->is_free = false;
+            //stats.free_blocks -= 2;
+            //stats.free_bytes -= block->prev->size + block->next->size;
+            //block->is_free = true;
+            block = combine(block, true, true, false);
+            //block->is_free = false;
         }
-        initWilde(MUL_SIZE(size));
+        initWilde(MUL_SIZE(size), false);
         /// unmap tmp
         memmove(block+1, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
