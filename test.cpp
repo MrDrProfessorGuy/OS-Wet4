@@ -302,6 +302,9 @@ public:
     }
     
     void validCalloc(BlockMetadata* block){
+        if (block == NULL){
+            return;
+        }
         size_t size = block->size;
         char* data = (char*)((block+1));
         for (char* iter = data; iter < (data+size); iter++) {
@@ -463,7 +466,7 @@ public:
                 size = stoi(str_size);
                 cout << size << "   address: ";
                 
-                BlockMetadata* data = (BlockMetadata*)smalloc(size);
+                BlockMetadata* data = (BlockMetadata*)scalloc(1, size);
                 if (data == nullptr){
                     cout << "NULL" << endl;
                     continue;
@@ -503,7 +506,7 @@ public:
                 
                 BlockMetadata* new_block = (BlockMetadata*)srealloc(block+1, size);
                 cout << "   block["<<block_num<<"]: " << block << "   Relocated to " << new_block-1 << endl;
-    
+                validCalloc(new_block);
             }
             else if(operation == "free"){
                 cout << "free:    block_num: ";
