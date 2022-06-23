@@ -446,14 +446,11 @@ public:
     
                 sfree(block);
             }
-        }
-        
-        
-        
-        
-        
-        
-        
+            
+            
+            printList();
+            
+        }/// end while
         
         
     }
