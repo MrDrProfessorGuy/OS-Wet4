@@ -153,6 +153,25 @@ public:
         return true;
     }
     
+    void printBlock(BlockMetadata* iter, int counter){
+        int width = 10;
+        ///Line 1 - Title
+        cout <<setfill('-')<<setw(2*width)<< " BlockMetaData["<< counter <<"] "<< iter;
+        cout <<setfill('-')<<setw(2*width) << std::endl;
+        ///Line 2
+        cout <<setw(width)<< "size= " << iter->size ;
+        cout <<setw(width)<< " || ";
+        cout <<setw(width)<<"is_free= " << iter->is_free << std::endl;
+        ///Line 3 - BlockList
+        cout <<setw(width)<< "prev= " << iter->prev << " || ";
+        cout <<setw(width)<<"next= " << iter->next << std::endl;
+        ///Line 4 - FreeList
+        cout <<setw(width)<< "prev_free= " << iter->prev_free << " || ";
+        cout <<setw(width)<<"next_free= " << iter->next_free << std::endl;
+        ///Line 4 - End
+        cout <<setfill('-')<<setw(4*width + 12) << endl;
+    }
+    
     void validateHeap(){
         cout <<setfill('_')<<setw(10)<< " Validate Heap " <<setw(10)<< endl;
         int width = 10;

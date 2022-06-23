@@ -247,6 +247,8 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
         
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
+        stats.free_blocks--;
+        stats.free_bytes += METADATA_SIZE;
     }
     
     //prev + current
@@ -261,6 +263,8 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true){
         
         stats.allocated_blocks--;
         stats.allocated_bytes+= METADATA_SIZE;
+        stats.free_blocks--;
+        stats.free_bytes += METADATA_SIZE;
     }
     
     new_block->size = total_size;
