@@ -193,10 +193,10 @@ BlockMetadata* initBlock(size_t size){
 }
 
 bool largeEnough(size_t size){
-    if (size <= (METADATA_SIZE + 128)){
-        return false;
+    if (size >= (METADATA_SIZE + 128)){
+        return true;
     }
-    return true;
+    return false;
 }
 
 
@@ -209,6 +209,7 @@ void splitBlock(BlockMetadata* block, size_t first_blk_size){
     assert(block->is_free);
     size_t new_size = (block->size) - (first_blk_size + METADATA_SIZE);
     
+    cout << "splitBlock:: first_blk_size: " << first_blk_size << "      new_size: " << new_size << endl;
     if(block->size > first_blk_size && largeEnough(new_size)){
         BlockMetadata* new_block = (BlockMetadata*)((char*)block + METADATA_SIZE + first_blk_size);
         //Update MetaData

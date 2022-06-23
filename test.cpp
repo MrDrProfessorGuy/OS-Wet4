@@ -280,6 +280,7 @@ public:
         srand(32);
         enum OP {Malloc, Calloc, Free, Realloc, OPs_NUM};
         
+        int num_of_errors = 0;
         
         for (int a = 0; a < test_num; a++){
             assert(validStats());
@@ -293,6 +294,7 @@ public:
                 //printHeap();
                 void* block = smalloc(size);
                 if (block == nullptr){
+                    num_of_errors++;
                     continue;
                 }
                 blocks.push_back(block);
@@ -305,7 +307,8 @@ public:
                 cout.flush();
                 void* block = scalloc(items, size);
                 if (block == nullptr){
-                    cout << " ERROR  address= "<< BLOCK_STRT_ADDR(block) << endl;
+                    num_of_errors++;
+                    cout << " ERROR  address= null" << endl;
                     continue;
                 }
                 blocks.push_back(block);
@@ -333,6 +336,10 @@ public:
             cout << endl;
         }
         
+        
+        cout << string(30, '=') << endl;
+        cout << string(9, '=') << " Test Ended " << string(9, '=') << endl;
+        cout << "Total Errors: " << num_of_errors << endl;
         
     }
 };
