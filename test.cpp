@@ -154,8 +154,8 @@ public:
     }
     
     void validateHeap(){
-        std::cout <<setfill('=')<<setw(10)<< " Validate Heap " <<setw(10)<< std::endl;
-        int width = 5;
+        cout <<setfill('=')<<setw(10)<< " Validate Heap " <<setw(10)<< std::endl;
+        int width = 10;
         int counter = 0;
         
         for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
