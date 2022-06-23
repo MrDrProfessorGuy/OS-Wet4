@@ -205,7 +205,7 @@ bool largeEnough(size_t size){
  * Get an address to start of MetaData of a free block and required data size,
  * split if largeEnough
  */
-void splitBlock(BlockMetadata* block, size_t first_blk_size){
+void splitBlock(BlockMetadata* block, size_t first_blk_size, bool update_stats=true){
     //assert(block->is_free);
     size_t new_size = (block->size) - (first_blk_size + METADATA_SIZE);
     
@@ -217,18 +217,22 @@ void splitBlock(BlockMetadata* block, size_t first_blk_size){
         //ListRemove(block, false, true);
         
         new_block->size = new_size;
-        //new_block->is_free = true;
+        
         
         BlockMetadata* block_next = block->next;
         linkBlocks(block, new_block, BlockList);
         linkBlocks(new_block, block_next, BlockList);
-        
+    
+        new_block->is_free = true; /// so assertion in FreeListInsertBlock isn't triggered
         FreeListInsertBlock(new_block);
-        
+    
+    
         stats.allocated_blocks++;
         stats.allocated_bytes -= METADATA_SIZE;
         stats.free_blocks++;
         stats.free_bytes -= METADATA_SIZE;
+        
+        
     }
 }
 
@@ -492,7 +496,7 @@ void* srealloc(void* oldp, size_t size){
         block = combine(block, true, false);
         ListRemove(block, false, true);
         //block->is_free = false;
-        splitBlock(block, MUL_SIZE(size));
+        splitBlock(block, MUL_SIZE(size), false);
         /// unmap tmp
         memmove(block+1, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
@@ -512,7 +516,7 @@ void* srealloc(void* oldp, size_t size){
             //stats.free_blocks--;
             
         }
-        cout << "-num_free_bytes" << -_num_free_bytes() << endl;
+        
         FreeListInsertBlock(block);
         initWilde(MUL_SIZE(size));
         /// unmap tmp
