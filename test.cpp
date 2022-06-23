@@ -385,9 +385,10 @@ int main(int argc,char* argv[]) {
     int seed = 1;
     if (argc > 1){
         seed = atoi(argv[1]);
+        a.test2(seed);
     }
     
-    a.test2(seed);
+    
     
     return 0;
 }
