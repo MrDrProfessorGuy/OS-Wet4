@@ -216,7 +216,7 @@ public:
                     iter++;
                 }
                 cout << "free address=" << BLOCK_STRT_ADDR(*iter) << endl;
-                //printHeapFree();
+                printHeap();
                 sfree(*iter);
                 assert(validSize(((BlockMetadata*)(*iter))-1));
                 blocks.erase(iter);
