@@ -154,8 +154,8 @@ public:
     }
     
     void printBlock(BlockMetadata* iter, int counter){
-        int width = 14;
-        int h = 8;
+        int width = 20;
+        int h = 4;
         ///Line 1 - Title
         cout <<string(2*width, '=')<< " BlockMetaData["<< counter <<"] "<< iter << string(2*width, '=')<<endl;
         
