@@ -148,6 +148,8 @@ public:
         std::cout << "------------------------------------------------------------" << std::endl;
     }
     
+
+    
     void MemView(){
         int width = 20;
         std::cout << "======================= Memory View =======================" << std::endl;
@@ -372,15 +374,97 @@ public:
         cout <<endl<< string(30, '=') << endl;
         
     }
+    
+    BlockMetadata* get_block(int block_num){
+        int counter = 0;
+        for (BlockMetadata* iter = &list.head; iter != nullptr; iter = iter->next) {
+            if (counter == block_num && iter != &list.tail){
+                return iter;
+            }
+            counter++;
+        }
+        return NULL;
+    }
+    
+    void dynamic_test(){
+        vector<void*> blocks;
+        
+        string operation = "";
+        string str_block_num = "";
+        string str_size = "";
+        string str_num_elements = "";
+        
+        int block_num, size, num_elements;
+        
+        while (operation != "exit"){
+            
+            cout <<  "Enter operation: ";
+            cin >> operation;
+            //scanf("Enter operation: %s", &operation);
+            if (operation == "malloc"){
+                cout << "malloc:    size: ";
+                cin >> str_size ;
+                size = stoi(str_size);
+                cout << size << "   address: ";
+                
+                BlockMetadata* data = (BlockMetadata*)smalloc(size);
+                if (data == nullptr){
+                    cout << "NULL" << endl;
+                    continue;
+                }
+                cout << data << endl;
+                blocks.push_back(data);
+            }
+            else if(operation == "calloc"){
+                cout << "calloc:    num_elements: ";
+                cin >> str_num_elements >> str_size;
+                num_elements = stoi(str_num_elements);
+                cout << num_elements << "   size: ";
+                size = stoi(str_size);
+                cout << size << "   address: ";
+                
+                
+                BlockMetadata* data = (BlockMetadata*)smalloc(size);
+                if (data == nullptr){
+                    cout << "NULL" << endl;
+                    continue;
+                }
+                cout << data << endl;
+                blocks.push_back(data);
+            }
+            else if(operation == "realloc"){
+            
+            }
+            else if(operation == "free"){
+                cin >> str_block_num;
+                cout << "free:    block_num: ";
+                block_num = stoi(str_block_num);
+                cout << block_num;
+                
+                BlockMetadata* block = get_block(block_num);
+                cout << "   address: " << block << endl;
+    
+                sfree(block);
+            }
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
 };
-
 
 
 
 int main(int argc,char* argv[]) {
     test a;
     
-    a.test_mmap();
+    a.dynamic_test();
     
     int seed = 1;
     if (argc > 1){
