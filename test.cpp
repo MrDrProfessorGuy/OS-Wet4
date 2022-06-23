@@ -156,12 +156,11 @@ public:
     void printBlock(BlockMetadata* iter, int counter){
         int width = 10;
         ///Line 1 - Title
-        
         cout <<string(2*width, '=')<< " BlockMetaData["<< counter <<"] "<< iter << string(2*width, '=')<<endl;
         
         ///Line 2
-        cout <<setfill(' ')<<setw(width)<< "size= " << iter->size ;
-        cout <<setfill(' ')<<setw(width)<< " || ";
+        cout <<left<<setfill(' ')<<string(width, ' ')<<setw(width)<< "size= " << iter->size ;
+        cout <<setfill(' ')<< " || ";
         cout <<setfill(' ')<<setw(width)<<"is_free= " << iter->is_free << std::endl;
         ///Line 3 - BlockList
         cout <<setw(width)<< "prev= " << iter->prev ;
@@ -172,7 +171,7 @@ public:
         cout <<setw(width)<< " || ";
         cout <<setw(width)<<"next_free= " << iter->next_free << std::endl;
         ///Line 4 - End
-        cout <<string(4*width, '-')<< endl;
+        cout <<string(4*width + 32, '-')<< endl;
     }
     
     void validateHeap(){
