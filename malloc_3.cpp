@@ -346,7 +346,6 @@ void* smalloc(size_t data_size){
         //cout << "smalloc:: using existing block " << new_block << endl;
         //printHeap();
         splitBlock(new_block, data_size);
-        new_block->is_free = false;
         ListRemove(new_block, false, true);
         //printHeap();
         //cout << "##########################################################" << endl;
