@@ -156,20 +156,23 @@ public:
     void printBlock(BlockMetadata* iter, int counter){
         int width = 10;
         ///Line 1 - Title
+        
         cout <<2*width*'='<< " BlockMetaData["<< counter <<"] "<< iter;
         cout <<4*width*'='<< std::endl;
         ///Line 2
-        cout <<setw(width)<< "size= " << iter->size ;
-        cout <<setw(width)<< " || ";
-        cout <<setw(width)<<"is_free= " << iter->is_free << std::endl;
+        cout <<setfill(' ')<<setw(width)<< "size= " << iter->size ;
+        cout <<setfill(' ')<<setw(width)<< " || ";
+        cout <<setfill(' ')<<setw(width)<<"is_free= " << iter->is_free << std::endl;
         ///Line 3 - BlockList
-        cout <<setw(width)<< "prev= " << iter->prev << " || ";
+        cout <<setw(width)<< "prev= " << iter->prev ;
+        cout <<setw(width)<< " || ";
         cout <<setw(width)<<"next= " << iter->next << std::endl;
         ///Line 4 - FreeList
-        cout <<setw(width)<< "prev_free= " << iter->prev_free << " || ";
+        cout <<setw(width)<< "prev_free= " << iter->prev_free;
+        cout <<setw(width)<< " || ";
         cout <<setw(width)<<"next_free= " << iter->next_free << std::endl;
         ///Line 4 - End
-        cout <<setfill('-')<<setw(4*width + 12) << endl;
+        cout <<2*width*'-'<< endl;
     }
     
     void validateHeap(){
