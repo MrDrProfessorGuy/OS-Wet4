@@ -490,7 +490,7 @@ void sfree(void* p){
         stats.free_bytes+= block_meta_data->size;
         //printHeap();
         //cout << "sfree:: block_meta_data= "<< block_meta_data << endl;
-        combine(block_meta_data);
+        combine(block_meta_data, true, true, true);
     }
    
 }
@@ -656,6 +656,7 @@ void* srealloc(void* oldp, size_t size){
         }
         memmove(block, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
+        return block;
     }
     
     //cout << string(30, '=') <<" Realloc End "<< string(30, '=') << endl;
