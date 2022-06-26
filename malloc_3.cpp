@@ -2,9 +2,10 @@
 #include "unistd.h"
 #include "string.h"
 #include "sys/mman.h"
-#include "assert.h"
-#include "iostream"
-#include "iomanip"
+#include "algorithm"
+//#include "assert.h"
+//#include "iostream"
+//#include "iomanip"
 using namespace std;
 
 #define MAX_SIZE 100000000
@@ -83,7 +84,7 @@ static struct List mmap_list {.head = {.size = 0, .is_free = false, .next = &(mm
 /// ========================================== Helper Functions ========================================== ///
 /// ====================================================================================================== ///
 
-
+/*
 void printHeap(){
     std::cout << "======================= PrintHeap =======================" << std::endl;
     
@@ -116,17 +117,18 @@ void printHeapFree(){
         counter++;
     }
     
-}
+}*/
 
 BlockMetadata* findFreeBlock(size_t size){
     BlockMetadata* iter = list.head.next_free;
     while(iter != &list.tail){
         if(size <= iter->size){
+            /*
             if (!iter->is_free){
                 cout << "ERROR::findFreeBlock:: address=" << iter << " is NOT free" << endl;
                 printHeap();
             }
-            assert(iter->is_free);
+            assert(iter->is_free);*/
             return iter;
         }
         iter = iter->next_free;
@@ -158,12 +160,13 @@ void ListRemove(BlockMetadata* meta_data, bool blockList, bool freeList){
         meta_data->next = NULL;
         meta_data->prev = NULL;
     }
+    
     if (freeList){
-        if (meta_data->is_free == false){
-            cout << "ERROR::ListRemove:: address=" << meta_data << " is NOT free" << endl;
-            printHeap();
-            assert(meta_data->is_free == true);
-        }
+        /*    if (meta_data->is_free == false){
+                cout << "ERROR::ListRemove:: address=" << meta_data << " is NOT free" << endl;
+                printHeap();
+                assert(meta_data->is_free == true);
+            }*/
         
         
         meta_data->is_free = false;
@@ -306,13 +309,13 @@ BlockMetadata* combine(BlockMetadata* block, bool prev=true, bool next=true, boo
 BlockMetadata* initWilde(size_t data_size, bool blockIsFree=true){
     BlockMetadata* wilderness = list.tail.prev;
     //assert(wilderness->is_free);
-    assert(wilderness != &list.head);
-    
+    //assert(wilderness != &list.head);
+    /*
     if (data_size <= wilderness->size){
         cout << "ERROR::initWilde:: address=" << wilderness << " is already big enough" << endl;
         printHeap();
         assert(data_size <= wilderness->size);
-    }
+    }*/
     BlockMetadata* new_block = (BlockMetadata*) sbrk((intptr_t) (data_size - wilderness->size));
     //cout <<"initWilde:: new size= "<< size - list.tail.prev->size << "    new_block= "<< new_block << endl;
     if(new_block == (void*)-1){
@@ -442,7 +445,7 @@ void* scalloc(size_t num, size_t size){
 }
 
 void FreeListInsertBlock(BlockMetadata* free_block){
-    assert(!free_block->is_free);
+    //assert(!free_block->is_free);
     free_block->is_free = true;
     //cout << "============= FreeListInsertBlock =============" << endl;
     //cout << "free_block= " << free_block << endl;
@@ -494,14 +497,14 @@ void sfree(void* p){
 
 
 void* srealloc(void* oldp, size_t size){
-    cout << string(30, '=') <<" Realloc "<< string(30, '=') << endl;
-    cout<< string(8, ' ') << "oldp: " << oldp << "   size: " << size << endl;
+    //cout << string(30, '=') <<" Realloc "<< string(30, '=') << endl;
+    //cout<< string(8, ' ') << "oldp: " << oldp << "   size: " << size << endl;
     if (size <= 0){
         return NULL;
     }
     
     if (oldp == NULL){
-        cout<< string(8, ' ') << "oldp == NULL " << endl;
+        //cout<< string(8, ' ') << "oldp == NULL " << endl;
         void* res = smalloc(size);
         if(res == NULL){
             return NULL;
@@ -520,7 +523,7 @@ void* srealloc(void* oldp, size_t size){
     memmove(tmp_data, block+1, min(block->size, MUL_SIZE(size)));
     
     if (MUL_SIZE(size) >= MMAP_THRESHOLD){
-        cout<< string(8, ' ') << "MUL_SIZE(size) >= MMAP_THRESHOLD " << endl;
+        //cout<< string(8, ' ') << "MUL_SIZE(size) >= MMAP_THRESHOLD " << endl;
         
         block = (BlockMetadata*) smalloc(MUL_SIZE(size));
         if(block == NULL){
@@ -533,7 +536,7 @@ void* srealloc(void* oldp, size_t size){
         return block;
     }
     if (block->size >= MUL_SIZE(size)){ /// a
-        cout<< string(8, ' ') << "block->size >= MUL_SIZE(size) " << endl;
+        //cout<< string(8, ' ') << "block->size >= MUL_SIZE(size) " << endl;
         //FreeListInsertBlock(block);
         splitBlock(block, MUL_SIZE(size), false);
         if (block->next != &list.tail && block->next->is_free){
@@ -552,7 +555,7 @@ void* srealloc(void* oldp, size_t size){
     
     
     if(merge_prev){/// b
-        cout << string(8, '~') <<" Realloc::B " << endl;
+        //cout << string(8, '~') <<" Realloc::B " << endl;
         
         //stats.free_bytes -= block->prev->size + METADATA_SIZE;
         //block->is_free = true;
@@ -569,12 +572,12 @@ void* srealloc(void* oldp, size_t size){
         munmap(tmp_data, MUL_SIZE(size));
     }
     else if(IS_WILDERNESS(block)){/// c
-        cout << string(8, '~') <<" Realloc::C " << endl;
+        //cout << string(8, '~') <<" Realloc::C " << endl;
         //stats.free_blocks++;
         //stats.free_bytes += block->size;
         
         if (IS_FREE(block->prev)){ /// b_note
-            cout << string(8, '~') <<" Realloc::C::Note " << endl;
+            //cout << string(8, '~') <<" Realloc::C::Note " << endl;
             //stats.free_bytes -= block->prev->size + METADATA_SIZE;
             //block->is_free = true;
             //FreeListInsertBlock(block);
@@ -591,7 +594,7 @@ void* srealloc(void* oldp, size_t size){
         munmap(tmp_data, MUL_SIZE(size));
     }
     else if(merge_next){/// d
-        cout << string(8, '~') <<" Realloc::D " << endl;
+        //cout << string(8, '~') <<" Realloc::D " << endl;
     
         //stats.free_bytes -= block->next->size + METADATA_SIZE;
         //block->is_free = true;
@@ -610,7 +613,7 @@ void* srealloc(void* oldp, size_t size){
         
     }
     else if(merge_all){/// e
-        cout << string(8, '~') <<" Realloc::E+F.1 " << endl;
+        //cout << string(8, '~') <<" Realloc::E+F.1 " << endl;
         //stats.free_blocks -= 2;
         //stats.free_bytes -= block->prev->size + block->next->size;
         //block->is_free = true;
@@ -627,7 +630,7 @@ void* srealloc(void* oldp, size_t size){
         munmap(tmp_data, MUL_SIZE(size));
     }
     else if(IS_WILDERNESS(block->next)){/// f.1 + f.2
-        cout << string(8, '~') <<" Realloc::F.2 " << endl;
+        //cout << string(8, '~') <<" Realloc::F.2 " << endl;
         if (IS_FREE(block->prev) && IS_FREE(block->next)){ /// f.1
             //stats.free_blocks -= 2;
             //stats.free_bytes -= block->prev->size + block->next->size;
@@ -644,7 +647,7 @@ void* srealloc(void* oldp, size_t size){
         munmap(tmp_data, MUL_SIZE(size));
     }
     else{/// g + h
-        cout << string(8, '~') <<" Realloc::G + H " << endl;
+        //cout << string(8, '~') <<" Realloc::G + H " << endl;
         
         block = (BlockMetadata*)smalloc(MUL_SIZE(size));
         sfree(oldp);
@@ -655,7 +658,7 @@ void* srealloc(void* oldp, size_t size){
         munmap(tmp_data, MUL_SIZE(size));
     }
     
-    cout << string(30, '=') <<" Realloc End "<< string(30, '=') << endl;
+    //cout << string(30, '=') <<" Realloc End "<< string(30, '=') << endl;
     return block+1;
 }
 
