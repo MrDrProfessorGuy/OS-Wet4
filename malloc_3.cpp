@@ -341,9 +341,9 @@ void* initial_allignment(){
     if(a == (void*)-1){
         return NULL;
     }
-    size_t diff = (uint64_t)a%8;
+    size_t diff = (size_t)a%8;
     if (diff != 0){
-        int alloc = 8 - (uint32_t)diff;
+        int alloc = 8 - (int)diff;
         if(sbrk(alloc) == (void*)-1){
             return NULL;
         }
