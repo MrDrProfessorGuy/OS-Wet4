@@ -331,6 +331,22 @@ BlockMetadata* initWilde(size_t data_size, bool blockIsFree=true){
     
     return wilderness;
 }
+static bool first_alloc = true;
+
+void* initial_allignment(){
+    void* a = sbrk(0);
+    if(a == (void*)-1){
+        return NULL;
+    }
+    size_t diff = (uint64_t)a%8;
+    if (diff != 0){
+        int alloc = 8 - (uint32_t)diff;
+        if(sbrk(alloc) == (void*)-1){
+            return NULL;
+        }
+    }
+    return a;
+}
 
 /// ====================================================================================================== ///
 /// ========================================== Malloc Functions ========================================== ///
@@ -338,6 +354,12 @@ BlockMetadata* initWilde(size_t data_size, bool blockIsFree=true){
 void* smalloc(size_t data_size){
     if(data_size <= 0 || MUL_SIZE(data_size) > MAX_SIZE){
         return NULL;
+    }
+    if (first_alloc == true){
+        if(initial_allignment() == NULL){
+            return NULL;
+        }
+        first_alloc = false;
     }
     data_size = MUL_SIZE(data_size);
     
@@ -495,13 +517,15 @@ void* srealloc(void* oldp, size_t size){
     if(tmp_data == MAP_FAILED){
         return NULL;
     }
-    memmove(tmp_data, block+1, block->size);
+    memmove(tmp_data, block+1, min(block->size, MUL_SIZE(size)));
     
     if (MUL_SIZE(size) >= MMAP_THRESHOLD){
         cout<< string(8, ' ') << "MUL_SIZE(size) >= MMAP_THRESHOLD " << endl;
         
-         block = (BlockMetadata*) smalloc(MUL_SIZE(size));
-        
+        block = (BlockMetadata*) smalloc(MUL_SIZE(size));
+        if(block == NULL){
+            return NULL;
+        }
         memmove(block, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
         
@@ -512,6 +536,10 @@ void* srealloc(void* oldp, size_t size){
         cout<< string(8, ' ') << "block->size >= MUL_SIZE(size) " << endl;
         //FreeListInsertBlock(block);
         splitBlock(block, MUL_SIZE(size), false);
+        if (block->next != &list.tail && block->next->is_free){
+            combine(block->next, false, true, true);
+        }
+        
         return block+1;
     }
     
@@ -533,6 +561,9 @@ void* srealloc(void* oldp, size_t size){
         //ListRemove(block, false, true);
         //block->is_free = false;
         splitBlock(block, MUL_SIZE(size), false);
+        if (block->next != &list.tail && block->next->is_free){
+            combine(block->next, false, true, true);
+        }
         /// unmap tmp
         memmove(block+1, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
@@ -569,6 +600,9 @@ void* srealloc(void* oldp, size_t size){
         //ListRemove(block, false, true);
         //block->is_free = false;
         splitBlock(block, MUL_SIZE(size), false);
+        if (block->next != &list.tail && block->next->is_free){
+            combine(block->next, false, true, true);
+        }
         /// unmap tmp
         memmove(block+1, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
@@ -581,6 +615,10 @@ void* srealloc(void* oldp, size_t size){
         //stats.free_bytes -= block->prev->size + block->next->size;
         //block->is_free = true;
         block = combine(block, true, true, false);
+        splitBlock(block, MUL_SIZE(size), false);
+        if (block->next != &list.tail && block->next->is_free){
+            combine(block->next, false, true, true);
+        }
         //block->is_free = false;
         //splitBlock(block, MUL_SIZE(size), false);
         
