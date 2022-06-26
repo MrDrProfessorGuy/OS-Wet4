@@ -213,7 +213,7 @@ void splitBlock(BlockMetadata* block, size_t first_blk_size, bool blockIsFree=tr
     size_t new_size = (block->size) - (first_blk_size + METADATA_SIZE);
     
     //cout << "splitBlock:: first_blk_size: " << first_blk_size << "      new_size: " << new_size << endl;
-    if(block->size >= first_blk_size+METADATA_SIZE && largeEnough(new_size)){
+    if(block->size >= (first_blk_size+METADATA_SIZE) && largeEnough(new_size)){
         BlockMetadata* new_block = (BlockMetadata*)((char*)block + METADATA_SIZE + first_blk_size);
         //Update MetaData
         block->size = first_blk_size;
