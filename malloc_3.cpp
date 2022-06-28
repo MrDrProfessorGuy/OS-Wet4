@@ -3,9 +3,9 @@
 #include "string.h"
 #include "sys/mman.h"
 #include "algorithm"
-#include "assert.h"
-#include "iostream"
-#include "iomanip"
+//#include "assert.h"
+//#include "iostream"
+//#include "iomanip"
 using namespace std;
 
 #define MAX_SIZE 100000000
@@ -84,39 +84,6 @@ static struct List mmap_list {.head = {.size = 0, .is_free = false, .next = &(mm
 /// ========================================== Helper Functions ========================================== ///
 /// ====================================================================================================== ///
 
-
-void printHeap(){
-    std::cout << "======================= PrintHeap =======================" << std::endl;
-    
-    int counter = 0;
-    for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next) {
-        std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
-        std::cout << "size= " << iter->size << " || ";
-        std::cout <<"is_free= " << iter->is_free << std::endl;
-        
-        std::cout << "prev= " << iter->prev << " || ";
-        std::cout <<"next= " << iter->next << std::endl;
-        
-        std::cout << "prev_free= " << iter->prev_free << " || ";
-        std::cout << "next_free= " << iter->next_free << std::endl;
-        std::cout << "------------------------------------------------------------" << std::endl;
-        counter++;
-    }
-}
-void printHeapFree(){
-    std::cout << "======================= PrintHeapFree =======================" << std::endl;
-    
-    int counter = 0;
-    for (BlockMetadata* iter = &list.head; iter != nullptr ; iter = iter->next_free) {
-        std::cout << "----------- BlockMetaData["<< counter <<"] "<< iter << " -----------" << std::endl;
-        std::cout << "      -size= " << iter->size << "     ||      -is_free= " << iter->is_free << std::endl;
-        std::cout << "      -prev= " << iter->prev << "     ||      -next= " << iter->next << std::endl;
-        std::cout << "      -prev_free= " << iter->prev_free << "       ||      -next_free= " << iter->next_free << std::endl;
-        std::cout << "------------------------------------------------------------" << std::endl;
-        counter++;
-    }
-    
-}
 
 BlockMetadata* findFreeBlock(size_t size){
     BlockMetadata* iter = list.head.next_free;
