@@ -320,8 +320,7 @@ void* initial_allignment(){
 /// ====================================================================================================== ///
 
 
-
-void* smalloc(size_t data_size, AllocMethod hugepage_threshold=HUGEPAGE_MALLOC_THRESHOLD){
+void* _smalloc(size_t data_size, AllocMethod hugepage_threshold=HUGEPAGE_MALLOC_THRESHOLD){
     if(data_size <= 0 || MUL_SIZE(data_size) > MAX_SIZE){
         return NULL;
     }
@@ -409,8 +408,13 @@ void* smalloc(size_t data_size, AllocMethod hugepage_threshold=HUGEPAGE_MALLOC_T
     return (new_block + 1);
 }
 
+void* smalloc(size_t data_size) {
+    return _smalloc(data_size);
+}
+
+
 void* scalloc(size_t num, size_t size){
-    void* res = smalloc(num * size, HUGEPAGE_CALLOC_THRESHOLD);
+    void* res = _smalloc(num * size, HUGEPAGE_CALLOC_THRESHOLD);
     if(res == NULL){
         return NULL;
     }
@@ -508,7 +512,7 @@ void* srealloc(void* oldp, size_t size){
     
     if (oldp == NULL){
         //cout<< string(8, ' ') << "oldp == NULL " << endl;
-        void* res = smalloc(size, HUGEPAGE_MALLOC_THRESHOLD);
+        void* res = _smalloc(size, HUGEPAGE_MALLOC_THRESHOLD);
         if(res == NULL){
             return NULL;
         }
@@ -529,7 +533,7 @@ void* srealloc(void* oldp, size_t size){
     bool malloc_mmap = (MUL_SIZE(size) >= HUGEPAGE_MALLOC_THRESHOLD) && (block->allocation_method == AllocViaMalloc);
     
     if (malloc_mmap){
-        block = (BlockMetadata*) smalloc(MUL_SIZE(size), HUGEPAGE_MALLOC_THRESHOLD);
+        block = (BlockMetadata*) _smalloc(MUL_SIZE(size), HUGEPAGE_MALLOC_THRESHOLD);
         if (block == NULL){
             return NULL;
         }
@@ -541,7 +545,7 @@ void* srealloc(void* oldp, size_t size){
     }
     else if (calloc_mmap){
         AllocMethod entry_size = block->allocation_method;
-        block = (BlockMetadata*) smalloc(MUL_SIZE(size), HUGEPAGE_CALLOC_THRESHOLD);
+        block = (BlockMetadata*) _smalloc(MUL_SIZE(size), HUGEPAGE_CALLOC_THRESHOLD);
         if (block == NULL){
             return NULL;
         }

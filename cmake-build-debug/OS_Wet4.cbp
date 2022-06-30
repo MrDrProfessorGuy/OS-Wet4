@@ -97,6 +97,9 @@
 		<Unit filename="/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/malloc_3.cpp">
 			<Option target="OS_Wet4"/>
 		</Unit>
+		<Unit filename="/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/malloc_4.cpp">
+			<Option target="OS_Wet4"/>
+		</Unit>
 		<Unit filename="/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/test.cpp">
 			<Option target="OS_Wet4"/>
 		</Unit>
