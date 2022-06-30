@@ -223,6 +223,33 @@ malloc_3.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/OS_Wet4.dir/build.make CMakeFiles/OS_Wet4.dir/malloc_3.cpp.s
 .PHONY : malloc_3.cpp.s
 
+malloc_4.o: malloc_4.cpp.o
+
+.PHONY : malloc_4.o
+
+# target to build an object file
+malloc_4.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OS_Wet4.dir/build.make CMakeFiles/OS_Wet4.dir/malloc_4.cpp.o
+.PHONY : malloc_4.cpp.o
+
+malloc_4.i: malloc_4.cpp.i
+
+.PHONY : malloc_4.i
+
+# target to preprocess a source file
+malloc_4.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OS_Wet4.dir/build.make CMakeFiles/OS_Wet4.dir/malloc_4.cpp.i
+.PHONY : malloc_4.cpp.i
+
+malloc_4.s: malloc_4.cpp.s
+
+.PHONY : malloc_4.s
+
+# target to generate assembly for a file
+malloc_4.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OS_Wet4.dir/build.make CMakeFiles/OS_Wet4.dir/malloc_4.cpp.s
+.PHONY : malloc_4.cpp.s
+
 test.o: test.cpp.o
 
 .PHONY : test.o
@@ -268,6 +295,9 @@ help:
 	@echo "... malloc_3.o"
 	@echo "... malloc_3.i"
 	@echo "... malloc_3.s"
+	@echo "... malloc_4.o"
+	@echo "... malloc_4.i"
+	@echo "... malloc_4.s"
 	@echo "... test.o"
 	@echo "... test.i"
 	@echo "... test.s"

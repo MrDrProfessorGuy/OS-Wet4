@@ -7,6 +7,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/malloc_1.cpp" "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/cmake-build-debug/CMakeFiles/OS_Wet4.dir/malloc_1.cpp.o"
   "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/malloc_2.cpp" "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/cmake-build-debug/CMakeFiles/OS_Wet4.dir/malloc_2.cpp.o"
   "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/malloc_3.cpp" "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/cmake-build-debug/CMakeFiles/OS_Wet4.dir/malloc_3.cpp.o"
+  "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/malloc_4.cpp" "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/cmake-build-debug/CMakeFiles/OS_Wet4.dir/malloc_4.cpp.o"
   "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/test.cpp" "/Users/guycohen/Library/CloudStorage/OneDrive-Technion/1 Courses/Operating Systems/Homework/HW4/Wet/OS-Wet4/cmake-build-debug/CMakeFiles/OS_Wet4.dir/test.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
