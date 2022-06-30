@@ -467,9 +467,9 @@ bool isMmaped(BlockMetadata* block){
     if (block == NULL || block == &list.tail || block == &list.head){
         return false;
     }
-    bool malloc_mmaped = (block->size >= HUGEPAGE_MALLOC_THRESHOLD) && (block->allocation_method == AllocViaMalloc);
-    bool calloc_mmaped = (block->allocation_method >= HUGEPAGE_CALLOC_THRESHOLD);
-    if (block->size >= MMAP_THRESHOLD || malloc_mmaped || calloc_mmaped){
+    //bool malloc_mmaped = (block->size >= HUGEPAGE_MALLOC_THRESHOLD) && (block->allocation_method == AllocViaMalloc);
+    //bool calloc_mmaped = (block->allocation_method >= HUGEPAGE_CALLOC_THRESHOLD);
+    if (block->allocated_with == MMAP){
         return true;
     }
     return false;
