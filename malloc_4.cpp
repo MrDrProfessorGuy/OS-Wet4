@@ -484,7 +484,7 @@ void sfree(void* p){
     if (block_meta_data->is_free){
         return;
     }
-    if (block_meta_data->size > MMAP_THRESHOLD && block_meta_data->size < DEFAULT_MMAP_THRESHOLD_MAX){
+    if (block_meta_data->size > MMAP_THRESHOLD && block_meta_data->size <= DEFAULT_MMAP_THRESHOLD_MAX){
         MMAP_THRESHOLD = block_meta_data->size;
         cout << "MMAP_THRESHOLD: " << MMAP_THRESHOLD << endl;
     }
