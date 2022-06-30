@@ -10,7 +10,7 @@ using namespace std;
 
 #define MAX_SIZE 100000000
 #define DEFAULT_MMAP_THRESHOLD_MAX (4 * 1024 * 1024 * sizeof(long))
-static size_t MMAP_THRESHOLD (128*1024);
+static size_t MMAP_THRESHOLD = (128*1024);
 
 #define HUGEPAGE_MALLOC_THRESHOLD (4 * 1000 * 1000)
 #define HUGEPAGE_CALLOC_THRESHOLD (2 * 1000 * 1000)
