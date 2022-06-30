@@ -4,7 +4,7 @@
 #include "sys/mman.h"
 #include "algorithm"
 //#include "assert.h"
-//#include "iostream"
+#include "iostream"
 //#include "iomanip"
 using namespace std;
 
@@ -533,6 +533,7 @@ void* srealloc(void* oldp, size_t size){
     bool malloc_mmap = (MUL_SIZE(size) >= HUGEPAGE_MALLOC_THRESHOLD) && (block->allocation_method == AllocViaMalloc);
     
     if (malloc_mmap){
+        cout << "realloc:: malloc_mmap" << endl;
         block = (BlockMetadata*) _smalloc(MUL_SIZE(size), HUGEPAGE_MALLOC_THRESHOLD);
         if (block == NULL){
             return NULL;
@@ -544,6 +545,7 @@ void* srealloc(void* oldp, size_t size){
         return block;
     }
     else if (calloc_mmap){
+        cout << "realloc:: calloc_mmap" << endl;
         AllocMethod entry_size = block->allocation_method;
         block = (BlockMetadata*) _smalloc(MUL_SIZE(size), HUGEPAGE_CALLOC_THRESHOLD);
         if (block == NULL){

@@ -5,6 +5,7 @@
 #include "iomanip"
 #include "vector"
 #include "colors.h"
+#include "assert.h"
 using namespace std;
 
 #define BLOCK_STRT_ADDR(block) (((BlockMetadata*)(block))-1)
