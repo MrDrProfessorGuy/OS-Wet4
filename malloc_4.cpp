@@ -542,7 +542,7 @@ void* srealloc(void* oldp, size_t size){
     
     bool calloc_mmap = (MUL_SIZE(size) >= HUGEPAGE_CALLOC_THRESHOLD) && (block->allocation_method > AllocViaMalloc);
     bool malloc_mmap = (MUL_SIZE(size) >= HUGEPAGE_MALLOC_THRESHOLD) && (block->allocation_method == AllocViaMalloc);
-    
+    cout << "realloc:: block->allocation_method: " << block->allocation_method << endl;
     if (malloc_mmap){
         cout << "realloc:: malloc_mmap" << endl;
         block = (BlockMetadata*) _smalloc(MUL_SIZE(size), HUGEPAGE_MALLOC_THRESHOLD);
