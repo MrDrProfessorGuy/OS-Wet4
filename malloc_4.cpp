@@ -547,6 +547,7 @@ void* srealloc(void* oldp, size_t size){
         cout << "realloc:: malloc_mmap" << endl;
         block = (BlockMetadata*) _smalloc(MUL_SIZE(size), HUGEPAGE_MALLOC_THRESHOLD);
         if (block == NULL){
+            munmap(tmp_data, MUL_SIZE(size));
             return NULL;
         }
         block->allocation_method = AllocViaMalloc;
@@ -560,6 +561,7 @@ void* srealloc(void* oldp, size_t size){
         AllocMethod entry_size = block->allocation_method;
         block = (BlockMetadata*) _smalloc(MUL_SIZE(size), HUGEPAGE_CALLOC_THRESHOLD);
         if (block == NULL){
+            munmap(tmp_data, MUL_SIZE(size));
             return NULL;
         }
         block->allocation_method = entry_size; // calloc
@@ -576,6 +578,7 @@ void* srealloc(void* oldp, size_t size){
         }
         block = (BlockMetadata*) smalloc(MUL_SIZE(size));
         if(block == NULL){
+            munmap(tmp_data, MUL_SIZE(size));
             return NULL;
         }
         memmove(block, tmp_data, MUL_SIZE(size));
@@ -592,6 +595,7 @@ void* srealloc(void* oldp, size_t size){
             combine(block->next, false, true, true);
         }
         
+        munmap(tmp_data, MUL_SIZE(size));
         return block+1;
     }
     
@@ -702,6 +706,7 @@ void* srealloc(void* oldp, size_t size){
         block = (BlockMetadata*)smalloc(MUL_SIZE(size));
         sfree(oldp);
         if (block == NULL){
+            munmap(tmp_data, MUL_SIZE(size));
             return NULL;
         }
         memmove(block, tmp_data, MUL_SIZE(size));
