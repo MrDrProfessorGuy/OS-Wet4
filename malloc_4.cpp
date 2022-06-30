@@ -35,6 +35,8 @@ size_t _num_meta_data();
 
 #define AllocViaMalloc 0
 typedef size_t AllocMethod;
+typedef enum AllocatedWith {SBRK, MMAP, STACK} AllocatedWith;
+
 
 typedef struct MallocMetadata {
     size_t size;
@@ -44,6 +46,7 @@ typedef struct MallocMetadata {
     MallocMetadata* next_free;
     MallocMetadata* prev_free;
     AllocMethod allocation_method;
+    AllocatedWith allocated_with;
 }BlockMetadata;
 
 inline size_t MUL_SIZE(size_t size){
@@ -77,11 +80,11 @@ struct List {
     BlockMetadata head;
     BlockMetadata tail;
 };
-static struct List list {.head = {.size = 0, .is_free = false, .next = &(list.tail), .prev = NULL, .next_free=&list.tail, .prev_free=NULL, .allocation_method=AllocViaMalloc},
-        .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(list.head), .next_free=NULL, .prev_free=&list.head, .allocation_method=AllocViaMalloc}};
+static struct List list {.head = {.size = 0, .is_free = false, .next = &(list.tail), .prev = NULL, .next_free=&list.tail, .prev_free=NULL, .allocation_method=AllocViaMalloc, .allocated_with=STACK},
+        .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(list.head), .next_free=NULL, .prev_free=&list.head, .allocation_method=AllocViaMalloc, .allocated_with=STACK}};
 
-static struct List mmap_list {.head = {.size = 0, .is_free = false, .next = &(mmap_list.tail), .prev = NULL, .next_free=&mmap_list.tail, .prev_free=NULL, .allocation_method=1},
-        .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(mmap_list.head), .next_free=NULL, .prev_free=&mmap_list.head, .allocation_method=1}};
+static struct List mmap_list {.head = {.size = 0, .is_free = false, .next = &(mmap_list.tail), .prev = NULL, .next_free=&mmap_list.tail, .prev_free=NULL, .allocation_method=1, .allocated_with=STACK},
+        .tail = {.size = 0, .is_free = false, .next = NULL, .prev = &(mmap_list.head), .next_free=NULL, .prev_free=&mmap_list.head, .allocation_method=1, .allocated_with=STACK}};
 
 /// ====================================================================================================== ///
 /// ========================================== Helper Functions ========================================== ///
@@ -150,6 +153,7 @@ BlockMetadata* initBlock(size_t size){
     }
     allocated_block->is_free = false;
     allocated_block->size = size;
+    allocated_block->allocated_with = SBRK;
     
     allocated_block->next_free = NULL;
     allocated_block->prev_free = NULL;
@@ -184,6 +188,7 @@ void splitBlock(BlockMetadata* block, size_t first_blk_size, bool blockIsFree=tr
         //ListRemove(block, false, true);
         
         new_block->size = new_size;
+        new_block->allocated_with = SBRK;
         
         
         BlockMetadata* block_next = block->next;
@@ -295,6 +300,7 @@ BlockMetadata* initWilde(size_t data_size, bool blockIsFree=true){
     
     wilderness->is_free = false;
     wilderness->size = data_size;
+    wilderness->allocated_with = SBRK;
     
     return wilderness;
 }
@@ -342,6 +348,7 @@ void* _smalloc(size_t data_size, AllocMethod hugepage_threshold=HUGEPAGE_MALLOC_
         new_region->is_free = false;
         new_region->size = data_size;
         new_region->allocation_method = AllocViaMalloc;
+        new_region->allocated_with = MMAP;
         BlockMetadata* next = mmap_list.head.next;
         linkBlocks(&(mmap_list.head), new_region, BlockList);
         linkBlocks(new_region, next, BlockList);
@@ -361,6 +368,7 @@ void* _smalloc(size_t data_size, AllocMethod hugepage_threshold=HUGEPAGE_MALLOC_
         new_region->is_free = false;
         new_region->size = data_size;
         new_region->allocation_method = AllocViaMalloc;
+        new_region->allocated_with = MMAP;
         BlockMetadata* next = mmap_list.head.next;
         linkBlocks(&(mmap_list.head), new_region, BlockList);
         linkBlocks(new_region, next, BlockList);
@@ -478,6 +486,7 @@ void sfree(void* p){
     }
     if (block_meta_data->size > MMAP_THRESHOLD && block_meta_data->size < DEFAULT_MMAP_THRESHOLD_MAX){
         MMAP_THRESHOLD = block_meta_data->size;
+        cout << "MMAP_THRESHOLD: " << MMAP_THRESHOLD << endl;
     }
     //block_meta_data->is_free = true;
     if (isMmaped(block_meta_data)){
@@ -559,7 +568,7 @@ void* srealloc(void* oldp, size_t size){
         sfree(oldp);
         return block;
     }
-    if (MUL_SIZE(size) >= MMAP_THRESHOLD){
+    if (isMmaped(block)){
         //cout<< string(8, ' ') << "MUL_SIZE(size) >= MMAP_THRESHOLD " << endl;
         if (block->size == MUL_SIZE(size)){
             munmap(tmp_data, MUL_SIZE(size));
