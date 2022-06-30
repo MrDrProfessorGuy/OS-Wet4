@@ -550,7 +550,7 @@ void* srealloc(void* oldp, size_t size){
             munmap(tmp_data, MUL_SIZE(size));
             return NULL;
         }
-        block->allocation_method = AllocViaMalloc;
+        (block-1)->allocation_method = AllocViaMalloc;
         memmove(block, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
         sfree(oldp);
@@ -564,7 +564,7 @@ void* srealloc(void* oldp, size_t size){
             munmap(tmp_data, MUL_SIZE(size));
             return NULL;
         }
-        block->allocation_method = entry_size; // calloc
+        (block-1)->allocation_method = entry_size; // calloc
         memmove(block, tmp_data, MUL_SIZE(size));
         munmap(tmp_data, MUL_SIZE(size));
         sfree(oldp);

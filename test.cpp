@@ -467,7 +467,7 @@ public:
                 size = stoi(str_size);
                 cout << size << "   address: ";
                 
-                BlockMetadata* data = (BlockMetadata*)scalloc(1, size);
+                BlockMetadata* data = (BlockMetadata*)smalloc(size);
                 if (data == nullptr){
                     cout << "NULL" << endl;
                     continue;
