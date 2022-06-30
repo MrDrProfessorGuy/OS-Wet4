@@ -338,7 +338,7 @@ void* _smalloc(size_t data_size, AllocMethod hugepage_threshold=HUGEPAGE_MALLOC_
     }
     data_size = MUL_SIZE(data_size);
     cout << "_smalloc:: hugepage_threshold: " << hugepage_threshold << "    data_size: " << data_size << endl;
-    if (data_size >= hugepage_threshold){
+    if (data_size >= hugepage_threshold && data_size >= MMAP_THRESHOLD){
         cout << "_smalloc:: allocating HugePage" << endl;
         BlockMetadata* new_region = (BlockMetadata*) mmap(NULL, data_size + METADATA_SIZE, PROT_READ | PROT_WRITE, MAP_HUGETLB | MAP_PRIVATE | MAP_ANONYMOUS , -1, 0);
         if(new_region == MAP_FAILED){
